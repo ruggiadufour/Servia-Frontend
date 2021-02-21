@@ -1,16 +1,80 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 html,
 body {
-  padding: 0;
-  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  overflow-x: hidden;
 }
-
 a {
   color: inherit;
   text-decoration: none;
 }
+.main-container {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+}
 
-* {
-  box-sizing: border-box;
+.centering {
+  margin: auto;
+}
+.general-width {
+  max-width: 1200px;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.flex-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: 15px;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.select {
+  padding: 15px;
+  font-size: 15px;
+}
+
+/* Butttons */
+.button-left:focus, .button-right:focus {
+  outline: none;
+  background-color: lightgray;
+}
+.button-left, .button-right {
+  height: 45px;
+  border: none;
+  padding: 10px;
+  margin: 5px 0;
+}
+.button-left:hover, .button-right:hover {
+  cursor: pointer;
+  background-color: #fff3
+}
+.button-left{
+  border-radius: 5px 0 0 5px;
+}
+.button-right {
+  border-radius: 0 5px 5px 0;
 }
