@@ -1,41 +1,23 @@
+//Styles
 import "../styles/globals.css";
-import { useEffect } from "react";
+//Framework
+import { parseCookies } from "nookies";
+import Router from "next/router";
+//Components
 import Nav from "../Components/Navbar/Nav";
 import Footer from "../Components/Footer";
-import { ProvideFilterState } from "../States/Filter";
-import PropTypes from 'prop-types';
-import { ThemeProvider } from "@material-ui/styles";
-import { createMuiTheme } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import themejson from "../styles/theme.json";
+import WrraperApp from "../Components/Wrapper_app";
 
-import ThemeClasses from "../styles/Theme";
-const theme = createMuiTheme(themejson.light);
-
-function MyApp(props) {
-  const { Component, pageProps } = props;
-
-  useEffect(() => {
-    const jssStyles = document.querySelector("#jss-server-side");
-    if (jssStyles) {
-      jssStyles.parentElement.removeChild(jssStyles);
-    }
-  }, []);
-
+function MyApp({ Component, pageProps, session }) {
   return (
-    <div className="main-container">
-      <ThemeClasses theme={theme}>
-        <ProvideFilterState>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Nav />
-            <div className="content">
-              <Component {...pageProps} />
-            </div>
-          </ThemeProvider>
-        </ProvideFilterState>
-      </ThemeClasses>
-      <Footer />
+    <>
+      <WrraperApp session={session}>
+        <Nav />
+        <div className="content">
+          <Component {...pageProps} />
+        </div>
+        <Footer />
+      </WrraperApp>
       <style jsx>
         {`
           .content {
@@ -50,11 +32,41 @@ function MyApp(props) {
           }
         `}
       </style>
-    </div>
+    </>
   );
 }
-MyApp.propTypes = {
-  Component: PropTypes.elementType.isRequired,
-  pageProps: PropTypes.object.isRequired,
+
+MyApp.getInitialProps = async ({ Component, ctx }) => {
+  let pageProps = {};
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
+  }
+
+  const session = parseCookies(ctx).session;
+
+  if (!session) {
+    if (ctx.pathname === "/xxx") {
+      redirectUser(ctx, "/login");
+    }
+  } else {
+    if (ctx.pathname === "/sesion" || ctx.pathname === "/sesion/registrar") {
+      redirectUser(ctx, "/");
+    }
+  }
+
+  // Destroy
+  // nookies.destroy(ctx, 'cookieName')
+
+  return { pageProps, session };
 };
+
+function redirectUser(ctx, location) {
+  if (ctx.req) {
+    ctx.res.writeHead(302, { Location: location });
+    ctx.res.end();
+  } else {
+    Router.push(location);
+  }
+}
+
 export default MyApp;

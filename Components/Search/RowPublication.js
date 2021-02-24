@@ -1,4 +1,3 @@
-import { useState } from "react";
 //Material-UI
 import {
   Hidden,
@@ -18,41 +17,25 @@ import Verificado from "@material-ui/icons/CheckCircleOutline";
 
 //Componentes
 import Estrellas from "../Estrellas.js";
+import {useRouter} from 'next/router'
 
 export default function RowPublication({ publication }) {
-  //Variables para el manejo del componente
-  const [precioPresupuesto, setPrecioPresupuesto] = useState("");
-  const [noMostrar, setnoMostrar] = useState(true);
-
-  const [datosPagina, setdatosPagina] = useState({
-    id: null,
-    titulo: "",
-    descripcion: "",
-    precio_estimado: 0,
-    imagenes: [],
-    servicio: "",
-    estrellas: 0,
-    tipo: false,
-    Usuario_id: { id: null, nombre: "", apellido: "", imagen_perfil: null },
-    Servicio_id: { nombre: "" },
-    pausado: false,
-    bloqueado: false,
-  });
-
+  const router = useRouter()
+  function seeMore(){
+    router.push(`/publicaciones/${publication.id}`)
+  }
 
   return (
     <div className="card-row background-2">
       <div className="card-img">
         <img
-          src={process.env.NEXT_PUBLIC_API + publication.images[0].url}
+          src={publication.images.length===0?"/IconoV2.png":process.env.NEXT_PUBLIC_API + publication.images[0].url}
           alt="1° imagen"
           className="image"
         />
       </div>
 
       <div className="card-info">
-        
-
         <Typography align="left" component="h5" variant="h4">
           {publication.title}
         </Typography>
@@ -76,15 +59,15 @@ export default function RowPublication({ publication }) {
           Presupuesto estimado: ${publication.price}
         </Typography>
 
-        <Chip variant="outlined" label={publication.service.name} />
+        {/* <Chip variant="outlined" label={publication.service.name} /> */}
 
         <Estrellas valor={4} clickeable={false} cambiarValor={() => {}} />
 
-        <a href="#">
-          <Button variant="contained" color="primary">
-            Leer más
-          </Button>
-        </a>
+
+        <Button variant="contained" color="primary" onClick={seeMore}>
+          Leer más
+        </Button>
+     
       </div>
 
       <style jsx>

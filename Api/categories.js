@@ -1,4 +1,4 @@
-
+import fetch from 'isomorphic-unfetch'
 
 export async function getCategories() {
   let data = [];

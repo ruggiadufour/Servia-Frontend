@@ -60,13 +60,7 @@ export default function RowProfile({ profile }) {
             )
         }
 
-        <Estrellas valor={4} clickeable={false} cambiarValor={() => {}} />
-
-        <a href="#">
-          <Button variant="contained" color="primary">
-            Leer más
-          </Button>
-        </a>
+        <Estrellas valor={4} clickeable={false} cambiarValor={() => {}} />        
       </div>
 
       <style jsx>

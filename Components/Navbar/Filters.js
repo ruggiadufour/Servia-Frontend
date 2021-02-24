@@ -15,10 +15,10 @@ import { getCategories } from "../../Api/categories";
 
 export default function Filters({ open, setOpen, applyFilters }) {
   const [categories, setCategories] = useState([]);
-  const [services, setServices] = useState({ data: [], category_id: null });
+  const [selectedCat, setSelectedCat] = useState(null);
   const [filters, setFilters] = useState({
     is_profile: false,
-    typePublication: false,
+    typePublication: true,
   });
 
   function handleClose() {
@@ -28,34 +28,25 @@ export default function Filters({ open, setOpen, applyFilters }) {
   useEffect(async () => {
     let res = await getCategories();
     if (res.length !== 0) {
-      setServices({ data: res[0].services, category_id: res[0].id, category: res[0].name });
+      setSelectedCat(res[0])
+      setFilters({...filters, category: res[0].name, category_id: res[0].id})
     }
     setCategories(res);
   }, []);
 
   function selectCategory(e) {
     let aux_cat = JSON.parse(e.target.value);
-    let aux_services = aux_cat.services.map((service) => {
-      service["selected"] = false;
-      return service;
-    });
-    let services_ = {};
-    services_["data"] = aux_services;
-    services_["category_id"] = aux_cat.id;
-    services_["category"] = aux_cat.name;
+    setSelectedCat(aux_cat)
 
-    setServices(services_);
-  }
+    let filters_ = {}
+    filters_["category_id"] = aux_cat.id;
+    filters_["category"] = aux_cat.name;
 
-  function handleSelect(index) {
-    let aux_services = [...services.data];
-    aux_services[index].selected = !aux_services[index].selected;
-    setServices({ ...services, data: aux_services });
+    setFilters({...filters, ...filters_});
   }
 
   function saveFilters(){
-    let aux_services = services.data.filter(service => service.selected === true)
-    applyFilters({...filters, category_id: services.category_id, category: services.category, services: aux_services})
+    applyFilters({...filters})
     setOpen(false);
   }
   
@@ -101,7 +92,7 @@ export default function Filters({ open, setOpen, applyFilters }) {
                       }}
                     />
                   }
-                  label="Filtrar por publicaciones de solicitudes de servicios de usuarios."
+                  label="Filtrar por publicaciones de solicitudes de servicios de usuarios (estas publicaciones son creadas por personas que están buscando un servicio en especial)."
                 />
               </ListItem>
             </>
@@ -112,6 +103,7 @@ export default function Filters({ open, setOpen, applyFilters }) {
               name="select"
               className="w-100 select"
               onChange={selectCategory}
+              value={selectedCat?selectedCat.name:""}
             >
               {categories.map((category, i) => (
                 <option key={i} value={JSON.stringify(category)}>
@@ -120,32 +112,6 @@ export default function Filters({ open, setOpen, applyFilters }) {
               ))}
             </select>
           </ListItem>
-
-          {!filters.is_profile && (
-            <>
-              <ListItem>
-                {filters.typePublication && (
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="space-around"
-                    alignItems="center"
-                  >
-                    {services &&
-                      services.data.map((service, i) => (
-                        <Grid key={i} item xs={6} sm={4} md={3} lg={2}>
-                          <SelectService
-                            service={service}
-                            handleSelect={handleSelect}
-                            index={i}
-                          />
-                        </Grid>
-                      ))}
-                  </Grid>
-                )}
-              </ListItem>
-            </>
-          )}
         </List>
         <Button
           onClick={() => {
@@ -160,24 +126,6 @@ export default function Filters({ open, setOpen, applyFilters }) {
           Guardar
         </Button>
       </Dialog>
-    </div>
-  );
-}
-
-function SelectService({ service, handleSelect, index }) {
-  const handleClick = () => {
-    handleSelect(index);
-  };
-
-  return (
-    <div>
-      <Chip
-        clickable
-        color="primary"
-        label={service.name}
-        icon={service.selected ? <Done /> : <Clear />}
-        onClick={handleClick}
-      />
     </div>
   );
 }

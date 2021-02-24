@@ -3,6 +3,7 @@ import Home from "../Components/Home/Home";
 import HomeScreen from "../Components/Home/HomeScreen";
 import Extra from "../Components/Home/Extra";
 import { getCategories } from "../Api/categories";
+
 export default function Home_container({ categories }) {
   return (
     <>
@@ -20,7 +21,7 @@ export default function Home_container({ categories }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const data = await getCategories();
   return {
     props: {

@@ -1,0 +1,77 @@
+//Material-UI
+import { Grid } from "@material-ui/core/";
+
+import { getPublication, getPublications } from "../../Api/publications";
+import MainData from "../../Components/Publication/MainData";
+import ProfileOwner from "../../Components/Publication/ProfileOwner";
+
+import { useRouter } from "next/router";
+import DefaultErrorPage from 'next/error'
+import Head from 'next/head'
+
+export default function Publicacion({ publication }) {
+  const router = useRouter();
+
+  // if isFallback means that the route is not generated statically
+  if (router.isFallback) {
+    return (
+      <h2>
+        Cargando...
+      </h2>
+    );
+  }
+
+  // This includes setting the noindex header because static files always return a status 200 but the rendered not found page page should obviously not be indexed
+  if(!publication) {
+    return (<>
+      <Head>
+        <meta name="robots" content="noindex"/>
+      </Head>
+      <DefaultErrorPage statusCode={404} />
+    </>)
+  }
+
+  return (
+    <div className="general-width p-15 centering">
+      <Grid container direction="row" justify="center" alignItems="stretch">
+        <Grid item md={8} xs={12}>
+          <MainData publication={publication} />
+        </Grid>
+
+        <Grid item md={4} xs={12}>
+          <ProfileOwner profile={publication.public_user} />
+        </Grid>
+      </Grid>
+      <style jsx>
+        {`
+          div {
+            border: solid thin white;
+            margin: 15px auto;
+          }
+        `}
+      </style>
+    </div>
+  );
+}
+// export async function getStaticPaths() {
+//   const data = await getPublications();
+
+//   const paths = data.map((post) => ({
+//     params: { postId: post.id.toString() },
+//   }));
+
+//   // We'll pre-render only these paths at build time.
+//   // { fallback: false } means other routes should 404.
+//   return { paths, fallback: true };
+// }
+
+export async function getServerSideProps({ params }) {
+  const data = await getPublication(params.postId);
+
+  //revalidate: 300,
+  return {
+    props: {
+      publication: data,
+    },
+  };
+}

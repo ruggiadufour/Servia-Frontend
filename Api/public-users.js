@@ -1,11 +1,10 @@
-let API = process.env.NEXT_PUBLIC_API;
-
 import fetch from 'isomorphic-unfetch'
 
-export async function getPublications(query) {
+let API = process.env.NEXT_PUBLIC_API;
+export async function getUsers(query) {
   let data;
   try {
-    let res = await fetch(API + "/publications", {
+    let res = await fetch(API + "/public-users", {
       method: "POST",
       body: JSON.stringify(query),
       headers: {
@@ -19,10 +18,10 @@ export async function getPublications(query) {
   }
 }
 
-export async function getPublication(id) {
+export async function getUser(id) {
   let data;
   try {
-    let res = await fetch(API + "/publications/"+id, {
+    let res = await fetch(API + "/public-users/"+id, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -34,4 +33,3 @@ export async function getPublication(id) {
     return [];
   }
 }
-

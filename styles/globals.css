@@ -1,3 +1,5 @@
+@import "~react-image-gallery/styles/css/image-gallery.css";
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,7 +12,7 @@ body {
   overflow-x: hidden;
 }
 a {
-  color: inherit;
+  color: inherit; 
   text-decoration: none;
 }
 .main-container {
@@ -30,8 +32,14 @@ a {
 .centering {
   margin: auto;
 }
+.centering-t {
+  margin: 1rem auto;
+}
 .general-width {
   max-width: 1200px;
+}
+.medium-width{
+  max-width: 500px;
 }
 
 .flex-col {
@@ -50,6 +58,12 @@ a {
 
 .w-100 {
   width: 100%;
+}
+.p-15{
+  padding: 15px;
+}
+.m-15{
+  margin: 15px;
 }
 
 .select {
@@ -77,4 +91,12 @@ a {
 }
 .button-right {
   border-radius: 0 5px 5px 0;
+}
+
+.circle-image {
+  border: solid thin gray;
+  border-radius: 50%;
+  height:150px!important;
+  width:150px!important;
+  margin: auto;
 }

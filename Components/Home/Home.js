@@ -1,4 +1,4 @@
-import {  useEffect, useState, useContext } from "react";
+
 import {useRouter} from "next/router";
 //Material UI
 import {
@@ -6,18 +6,13 @@ import {
   Grid,
 } from "@material-ui/core/";
 
-import React from 'react'
-import {FilterState} from '../../States/Filter'
-
 export default function Home({ categories }) {
   const router = useRouter();
-  const {FState, FDispatch} = useContext(FilterState)
 
   function searchProfiles(id,name){
-    let filter = {category:name, category_id: id, is_profile: true, services: [], typePublication: true, word: ""}
-    FDispatch({ type: "setFilter", payload: filter });
-    router.push("/busqueda")
+    router.push("/publicaciones?category_id="+id+"&type=true")
   }
+  
   return (
     <div className="general-width categories">
       <Typography component="h2" variant="h4" align="left">
@@ -36,6 +31,7 @@ export default function Home({ categories }) {
                 src={process.env.NEXT_PUBLIC_API + cat.image.formats.small.url}
                 height="150px"
                 width="150px"
+                className="circle-image"
                 onClick={()=>{searchProfiles(cat.id,cat.name)}}
               />
             </Grid>
@@ -47,12 +43,6 @@ export default function Home({ categories }) {
         {`
           .all {
             margin-top: 25px;
-          }
-          img {
-            border: solid thin gray;
-            border-radius: 50%;
-            height:150px;
-            width:150px;
           }
           img:hover{
             cursor: pointer;

@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Link from "next/link";
 import { Instagram, Facebook } from "@material-ui/icons/";
 
 //Material-UI
 import { Typography, Grid, AppBar, Toolbar } from "@material-ui/core/";
+import Alert from '../Components/Alert'
 
 //Componente que se muestra en la sección más baja de todas las vistas, es decir, el footer
 export default function Footer() {
   const [contactanos, setcontactanos] = useState(false);
-
   return (
     <>
+      <Alert/>
       <AppBar position="relative" color="secondary">
         <Toolbar>
           <Grid container direction="row" alignItems="center" justify="center">

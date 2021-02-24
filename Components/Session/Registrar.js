@@ -10,7 +10,7 @@ import axios from 'axios';
 //Componentes creados
 import Estilos from '../Estilos.js';
 import SubirImagen from '../SubirImagen.js';
-import InicioSesion from "../Sesion/InicioSesion.js";
+import InicioSesion from "./InicioSesion.js";
 import AlertaMensaje from '../AlertaMensaje.js';
 
 import { ObtenerEstadoAplicacion } from '../../Estados/AplicacionEstado'
