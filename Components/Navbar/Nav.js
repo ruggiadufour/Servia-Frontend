@@ -1,20 +1,25 @@
 //Material-UI
 import { Typography } from "@material-ui/core/";
+//Framework
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
+//Components
 import Filters from "./Filters";
+import LoggedUser from "./LoggedUser";
+import Hamburg from "./Hamburg";
+import { UserState } from "../../States/User";
+
 import styles from "../../styles/Navbar.module.css";
 
-import { UserState } from "../../States/User";
 export default function Navbar() {
   const router = useRouter();
   const { UState } = useContext(UserState);
 
-  useEffect(()=>{
-    console.log(UState)
-  },[UState])
+  useEffect(() => {
+    console.log(UState);
+  }, [UState]);
 
   //State variables
   const [openFilters, setOpenFilters] = useState(false);
@@ -54,13 +59,15 @@ export default function Navbar() {
   return (
     <div className="background-primary-1">
       <div className={`centering general-width ${styles.navbar_container}`}>
-        <Image src="/icono2.png" layout="intrinsic" width={75} height={75} />
-        <Typography component="h1" variant="h5">
-          <Link href="/">Servia</Link>
-        </Typography>
+        <div className={styles.brand}>
+          <Image src="/icono2.png" layout="intrinsic" width={75} height={75} />
+          <Typography component="h1" variant="h5">
+            <Link href="/">Servia</Link>
+          </Typography>
+        </div>
 
         {/* Publication filter */}
-        <div className={`${styles.filters} centering`}>
+        <div className={`${styles.filters}`}>
           {/* Input and buttons */}
           <div className={styles.filters__input}>
             <input
@@ -120,6 +127,13 @@ export default function Navbar() {
             applyFilters={setFilters}
           />
         </div>
+
+        {UState?.jwt && (
+          <>
+            <LoggedUser />
+            <Hamburg />
+          </>
+        )}
 
         {/* Login buttons */}
         {!UState?.jwt && (

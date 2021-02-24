@@ -24,7 +24,7 @@
 
 .filters__info {
   position: relative;
-  padding-right: 15px; 
+  padding-right: 15px;
 }
 .filters__input {
 }
@@ -35,8 +35,16 @@
   color: black;
 }
 
+.brand {
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .filters {
   min-width: 250px;
+  margin-right: auto;
 }
 
 .input-search {

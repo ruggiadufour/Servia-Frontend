@@ -28,7 +28,7 @@ export default function Home({ categories }) {
               </Typography>
 
               <img
-                src={process.env.NEXT_PUBLIC_API + cat.image.formats.small.url}
+                src={process.env.NEXT_PUBLIC_API+cat.image.formats.small?.url}
                 height="150px"
                 width="150px"
                 className="circle-image"

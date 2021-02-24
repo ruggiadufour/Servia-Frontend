@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 //Material UI
 import {
   Grid,
@@ -18,8 +18,10 @@ import axios from "axios";
 import { setCookie } from "nookies";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import {UserState} from '../../States/User'
 
 export default function IniciarSesion({ mensaje }) {
+  const { UDispatch } = useContext(UserState)
   const [cargando, setcargando] = useState(false);
   const [alerta, setalerta] = useState("");
   const API = process.env.NEXT_PUBLIC_API;
@@ -67,6 +69,11 @@ export default function IniciarSesion({ mensaje }) {
             path: "/",
           }
         );
+
+        UDispatch({
+          type: "setUser",
+          payload: { user: response.data.user, jwt: response.data.jwt },
+        });  
 
         setcargando(false);
         router.push("/");

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Router from "next/router";
 //States
@@ -11,7 +11,7 @@ import RegisterModify from "../../Components/Session/Register-Modify";
 export default function SignIn() {
   const API = process.env.NEXT_PUBLIC_API;
   const { ADispatch } = useContext(AlertState);
-  const { UDispatch } = useContext(UserState);
+  const { UState, UDispatch } = useContext(UserState);
 
   //Variables de la página
   const [message, setMessage] = useState("");
@@ -22,21 +22,29 @@ export default function SignIn() {
   //Variables de los campos
   const [profileImage, setProfileImage] = useState([]);
   const [user, setUser] = useState({
-    name: "",
-    surname: "",
-    email: "",
-    username: "",
-    phone: "",
-    password: "",
-    password_again: "",
-    dni: "",
-    description: "",
+    username: UState.user.username,
+      email: UState.user.email,
+      password: "",
+      password_again: "",
+      dni: UState.user.dni,
+      type: UState.user.type,
+      waiting_verification: UState.user.waiting_verification,
+      name: UState.user.public_user.name,
+      surname: UState.user.public_user.surname,
+      show_phone: UState.user.public_user.show_phone,
+      verified: UState.user.public_user.verified,
+      phone: UState.user.public_user.phone,
+      description: UState.user.public_user.description,
+      state: UState.user.public_user.state,
   });
+
+    console.log("XXXX")  
 
   return (
     <RegisterModify
       user={user}
       setUser={setUser}
+      UState={UState}
       submit={signIn}
       loading={loading}
       message={message}
@@ -109,7 +117,7 @@ export default function SignIn() {
         setLoading(false);
       });
   }
-  
+
   function getFormData() {
     const formData = new FormData();
     if (profile) formData.append("files.profile", profile);
