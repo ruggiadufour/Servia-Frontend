@@ -28,6 +28,7 @@ export function Wrapper2({ children }) {
             background-color: lightgray;
             padding: 10px;
             border-radius: 5px;
+            max-width: 500px;
           }
         `}
       </style>

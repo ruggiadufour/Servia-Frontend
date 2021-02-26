@@ -2,11 +2,7 @@ import { useState, useEffect, useContext } from "react";
 //Material UI
 import {
   Grid,
-  Link as LinkMUI,
   LinearProgress,
-  Modal,
-  Backdrop,
-  Fade,
   Typography,
   TextField,
   Hidden,
@@ -22,11 +18,11 @@ import {UserState} from '../../States/User'
 
 export default function IniciarSesion({ mensaje }) {
   const { UDispatch } = useContext(UserState)
-  const [cargando, setcargando] = useState(false);
-  const [alerta, setalerta] = useState("");
   const API = process.env.NEXT_PUBLIC_API;
   const router = useRouter();
-
+  
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const [data, setData] = useState({
     identifier: "",
     password: "",
@@ -42,11 +38,11 @@ export default function IniciarSesion({ mensaje }) {
   };
 
   async function logIn() {
-    setcargando(true);
+    setLoading(true);
 
     axios
       .post(
-        "http://localhost:1337/auth/local",
+        API+"/auth/local",
         {
           identifier: data.identifier,
           password: data.password,
@@ -59,7 +55,7 @@ export default function IniciarSesion({ mensaje }) {
       )
       .then((response) => {
         console.log("Well done!");
-
+        console.log(response.data)
         setCookie(
           null,
           "session",
@@ -75,16 +71,17 @@ export default function IniciarSesion({ mensaje }) {
           payload: { user: response.data.user, jwt: response.data.jwt },
         });  
 
-        setcargando(false);
-        router.push("/");
+        setLoading(false);
+        // router.push("/");
       })
       .catch((error) => {
+        console.log(error.response)
         let err = JSON.parse(error.response.request.response).message[0]
           .messages[0].id;
         if (err === "Auth.form.error.invalid")
-          setalerta("Correo o contraseña incorrectos");
+        setMessage("Correo o contraseña incorrectos");
 
-        setcargando(false);
+          setLoading(false);
       });
   }
 
@@ -126,14 +123,14 @@ export default function IniciarSesion({ mensaje }) {
           </Grid>
 
           <Hidden xlDown={mensaje === ""}>
-            <Typography color="error">{alerta}</Typography>
+            <Typography color="error">{message}</Typography>
           </Hidden>
 
           <Grid item xs={12} align="center">
             <a href="#" className="centering text-secondary-1">Olvidé mi contraseña</a>
           </Grid>
 
-          <div hidden={!cargando}>
+          <div hidden={!loading} className="w-100">
             <LinearProgress />
           </div>
 

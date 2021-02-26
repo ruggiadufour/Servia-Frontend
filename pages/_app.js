@@ -44,20 +44,27 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
 
   const session = parseCookies(ctx).session;
 
+  let getSession = null
+  if(session){
+    getSession = JSON.parse(session)
+  }
+  
+
   if (!session) {
-    if (ctx.pathname === "/xxx") {
+    if (ctx.pathname === "/perfil/modificar" || ctx.pathname === "/perfil/proveedor/modificar") {
       redirectUser(ctx, "/login");
     }
   } else {
     if (ctx.pathname === "/sesion" || ctx.pathname === "/sesion/registrar") {
       redirectUser(ctx, "/");
     }
+   
   }
 
   // Destroy
   // nookies.destroy(ctx, 'cookieName')
 
-  return { pageProps, session };
+  return { pageProps, session: getSession };
 };
 
 function redirectUser(ctx, location) {

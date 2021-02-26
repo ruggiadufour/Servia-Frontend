@@ -14,14 +14,16 @@ import Verificado from "@material-ui/icons/CheckCircleOutline";
 import Estrellas from "../Estrellas.js";
 
 export default function RowProfile({ profile }) {
+  function getImage() {
+    let image = profile?.profile?.url
+      ? process.env.NEXT_PUBLIC_API + profile.profile.url
+      : "/IconoV2.png";
+    return image
+  }
   return (
     <div className="card-row background-2">
       <div className="card-img">
-        <img
-          src={process.env.NEXT_PUBLIC_API + profile.profile.url}
-          alt="1° imagen"
-          className="image"
-        />
+        <img src={getImage()} alt="1° imagen" className="image" />
       </div>
 
       <div className="card-info">
@@ -52,15 +54,15 @@ export default function RowProfile({ profile }) {
           <Typography>{profile.description}</Typography>
         </div>
 
-        <Typography color="secondary" align="left">Publicaciones: </Typography>
-        
-        {
-            profile.publications.map((pub,i)=>
-                <Chip variant="outlined" label={pub.title} key={i} />
-            )
-        }
+        <Typography color="secondary" align="left">
+          Publicaciones:{" "}
+        </Typography>
 
-        <Estrellas valor={4} clickeable={false} cambiarValor={() => {}} />        
+        {profile.publications.map((pub, i) => (
+          <Chip variant="outlined" label={pub.title} key={i} />
+        ))}
+
+        <Estrellas valor={4} clickeable={false} cambiarValor={() => {}} />
       </div>
 
       <style jsx>
@@ -84,8 +86,10 @@ export default function RowProfile({ profile }) {
           }
           .card-row {
             max-width: 500px;
+            height: 100%;
             display: flex;
             flex-wrap: wrap;
+
           }
         `}
       </style>

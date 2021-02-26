@@ -5,7 +5,7 @@ import axios from "axios";
 
 import {UserState} from '../States/User'
 //Componente utilizado para la carga de imágenes en el sitio
-const SingleFileAutoSubmit = ({ setFiles, images, amount }) => {
+const SingleFileAutoSubmit = ({ setFiles, images, amount, setToDelete }) => {
   const {UState} = useContext(UserState)
 
   const API = process.env.NEXT_PUBLIC_API;
@@ -26,12 +26,10 @@ const SingleFileAutoSubmit = ({ setFiles, images, amount }) => {
     let fetched = await fetch(API + image.url);
     let buf = await fetched.arrayBuffer();
     file = new File([buf], "" + image.id, { type: "image/jpeg" });
-    console.log(file);
     return file;
   }
 
   useEffect(async () => {
-    console.log(images);
     let files = await Promise.all(
       images.map(async (image) => {
         return await convertToFile(image);
@@ -46,27 +44,18 @@ const SingleFileAutoSubmit = ({ setFiles, images, amount }) => {
     if (status === "removed") {
       let deletedSome = initialFiles.some((fileLoaded) => fileLoaded === file);
       if (deletedSome) {
-        axios
-          .delete(API + "/upload/files/" + Number(file.name), {
-            headers: {
-              Authorization: `Bearer ${UState.jwt}`,
-            },
-          })
-          .then((response) => {
-            console.log(response.data)
-          })
-          .catch((error) => {
-            console.log("Error al borrar las imagenes");
-            console.log(error.response);
-          });
+        setToDelete(Number(file.name))
       }
     }
     if (status === "uploading") {
-      //setcargando(true)
     }
     if (status === "done") {
-      //setcargando(false)
-      setFiles(file);
+      let isUploaded = initialFiles.some((fileLoaded) => fileLoaded === file);
+
+      //if is uploaded we dont setFiles, so in modificar we don't save a new file
+      if(!isUploaded){
+        setFiles(file);
+      }
     }
   };
 

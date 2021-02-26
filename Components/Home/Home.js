@@ -1,18 +1,14 @@
-
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 //Material UI
-import {
-  Typography,
-  Grid,
-} from "@material-ui/core/";
+import { Typography, Grid } from "@material-ui/core/";
 
 export default function Home({ categories }) {
   const router = useRouter();
 
-  function searchProfiles(id,name){
-    router.push("/publicaciones?category_id="+id+"&type=true")
+  function searchProfiles(id, name) {
+    router.push("/publicaciones?category_id=" + id + "&type=true");
   }
-  
+
   return (
     <div className="general-width categories">
       <Typography component="h2" variant="h4" align="left">
@@ -21,21 +17,26 @@ export default function Home({ categories }) {
       </Typography>
       <div className="all">
         <Grid container spacing={5} justify="space-around" alignItems="center">
-          {categories.map((cat, i) => (
-            <Grid item sm={4} md={3} lg={2} key={i} align="center">
+          {categories.map((cat, i) => {
+            let API = process.env.NEXT_PUBLIC_API;
+            let image = cat.image?.formats?.small?.url?(API+cat.image?.formats?.small?.url):"/Icono3.png"
+
+            return <Grid item sm={4} md={3} lg={2} key={i} align="center">
               <Typography align="center" variant="body1">
                 {cat.name}
               </Typography>
 
               <img
-                src={process.env.NEXT_PUBLIC_API+cat.image.formats.small?.url}
+                src={ image }
                 height="150px"
                 width="150px"
                 className="circle-image"
-                onClick={()=>{searchProfiles(cat.id,cat.name)}}
+                onClick={() => {
+                  searchProfiles(cat.id, cat.name);
+                }}
               />
-            </Grid>
-          ))}
+            </Grid>;
+          })}
         </Grid>
       </div>
 
@@ -44,7 +45,7 @@ export default function Home({ categories }) {
           .all {
             margin-top: 25px;
           }
-          img:hover{
+          img:hover {
             cursor: pointer;
           }
           .categories {

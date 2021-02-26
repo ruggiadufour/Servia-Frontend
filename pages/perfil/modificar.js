@@ -8,7 +8,7 @@ import { setCookie } from "nookies";
 import RegisterModify from "../../Components/Session/Register-Modify";
 
 //Componente utilizado para registrar un nuevo usuario o para modificar los datos de un usuario
-export default function SignIn() {
+export default function Change() {
   const API = process.env.NEXT_PUBLIC_API;
   const { ADispatch } = useContext(AlertState);
   const { UState, UDispatch } = useContext(UserState);
@@ -17,62 +17,38 @@ export default function SignIn() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState(null);
-  const [isProvider, setIsProvider] = useState(false);
-
-  //Variables de los campos
-  const [profileImage, setProfileImage] = useState([]);
-  const [user, setUser] = useState({
-    username: UState.user.username,
-      email: UState.user.email,
-      password: "",
-      password_again: "",
-      dni: UState.user.dni,
-      type: UState.user.type,
-      waiting_verification: UState.user.waiting_verification,
-      name: UState.user.public_user.name,
-      surname: UState.user.public_user.surname,
-      show_phone: UState.user.public_user.show_phone,
-      verified: UState.user.public_user.verified,
-      phone: UState.user.public_user.phone,
-      description: UState.user.public_user.description,
-      state: UState.user.public_user.state,
-  });
-
-    console.log("XXXX")  
 
   return (
     <RegisterModify
-      user={user}
-      setUser={setUser}
       UState={UState}
-      submit={signIn}
+      submit={changeData}
       loading={loading}
       message={message}
+      setMessage={setMessage}
       setProfile={setProfile}
-      setIsProvider={setIsProvider}
-      isProvider={isProvider}
-      register={true}
+      register={false}
     />
   );
 
   //Función que se ejecuta si se quiere crear un usuario nuevo
-  async function signIn() {
+  async function changeData(user) {
     setLoading(true);
-    let formData = getFormData();
+    let formData = getFormData(user);
 
+    // /users/5
     axios
-      .post(API + "/auth/local/register", formData, {
+      .put(API + "/users/" + UState.user.id, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${UState.jwt}`,
         },
       })
       .then((response) => {
         setLoading(false);
-
         ADispatch({
           type: "setAlert",
           payload: {
-            desc: "¡Su cuenta ha sido creada satisfactoriamente!",
+            desc: "¡Su cuenta ha sido modificada satisfactoriamente!",
             type: "success",
             open: true,
           },
@@ -80,23 +56,23 @@ export default function SignIn() {
 
         UDispatch({
           type: "setUser",
-          payload: { user: response.data.user, jwt: response.data.jwt },
+          payload: { user: response.data, jwt: UState.jwt },
         });
 
-        setCookie(
-          null,
-          "session",
-          JSON.stringify({ user: response.data.user, jwt: response.data.jwt }),
-          {
-            maxAge: 30 * 24 * 60 * 60,
-            path: "/",
-          }
-        );
-        Router.push("/");
+        // setCookie(
+        //   null,
+        //   "session",
+        //   JSON.stringify({ user: response.data, jwt: UState.jwt }),
+        //   {
+        //     maxAge: 30 * 24 * 60 * 60,
+        //     path: "/",
+        //   }
+        // );
+
+        //Router.push("/");
       })
       .catch((error) => {
         // Ocurrió un error
-        console.log(error.response);
         let err = JSON.parse(error.response.request.response).message[0]
           .messages[0].id;
         if (err === "Auth.form.error.email.taken")
@@ -118,20 +94,21 @@ export default function SignIn() {
       });
   }
 
-  function getFormData() {
+  function getFormData(user) {
     const formData = new FormData();
     if (profile) formData.append("files.profile", profile);
-
+    console.log(user)
     formData.append(
       "data",
       JSON.stringify({
         private_usr: {
           username: user.username,
           email: user.email,
-          password: user.password,
-          dni: user.dni,
-          type: isProvider ? 2 : 1,
-          waiting_verification: false,
+          //password: user.password,
+          //dni: user.dni,
+          type: 1,
+          dni: "50",
+          //waiting_verification: false,
         },
         public_usr: {
           name: user.name,
@@ -143,7 +120,7 @@ export default function SignIn() {
           description: user.description,
           state: false,
           location: "",
-          id_private: null,
+          //id_private: UState.user.id,
         },
       })
     );

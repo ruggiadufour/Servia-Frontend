@@ -7,7 +7,6 @@ import {
   TextField,
   Button,
   Divider,
-  Paper,
   Grid,
   Checkbox,
   FormControlLabel,
@@ -16,26 +15,43 @@ import {
 import UploadImage from "../../Components/UploadImage";
 
 export default function RegisterModify({
-  user,
-  setUser,
   UState,
   submit,
   loading,
   message,
+  setMessage,
   setProfile,
-  setIsProvider,
-  isProvider,
   register,
 }) {
   const [profile_link, setProfile_link] = useState([]);
-  console.log(UState)
-    useEffect(()=>{
-        if(UState?.user?.public_user){
-            if(UState.user.public_user?.profile){
-                setProfile_link([UState.user.public_user.profile])
-            }
-        }
-    },[user])
+  const [isProvider, setIsProvider] = useState(UState?.user?.type===2?true:false);
+  const [deleteImage, setDeleteImage] = useState(null);
+
+  //Variables de los campos
+  const [user, setUser] = useState({
+    username: UState?.user?.username,
+    email: UState?.user?.email,
+    password: "",
+    password_again: "",
+    dni: UState?.user?.dni,
+    type: UState?.user?.type,
+    waiting_verification: UState?.user?.waiting_verification,
+    name: UState?.user?.public_user?.name,
+    surname: UState?.user?.public_user?.surname,
+    show_phone: UState?.user?.public_user?.show_phone,
+    verified: UState?.user?.public_user?.verified,
+    phone: UState?.user?.public_user?.phone,
+    description: UState?.user?.public_user?.description,
+    state: UState?.user?.public_user?.state,
+  });
+
+  useEffect(() => {
+    if (UState?.user?.public_user) {
+      if (UState.user.public_user?.profile) {
+        setProfile_link([UState.user.public_user.profile]);
+      }
+    }
+  }, [UState]);
 
   const handleChange = (e) => {
     if (message !== "") setMessage("");
@@ -56,15 +72,35 @@ export default function RegisterModify({
     ) {
       setMessage("El email se encuentra escrito incorrectamente");
     } else {
-      if (user.password !== user.password_again) {
+      if (register && user.password !== user.password_again) {
         setMessage("Las contraseñas no coinciden");
-      } else if (user.password.length < 8) {
+      } else if (register && user.password.length < 8) {
         setMessage("La contraseña debe tener al menos 8 caracteres");
       } else {
-        submit();
+        let user_ = {...user}
+        user_["type"] = isProvider?2:1
+        submit(user_);
       }
     }
   };
+
+  function setToDelete(id) {
+    setDeleteImage(id);
+
+    //UDispatch({type:"cleanProfileImage"})
+
+    // axios
+    //   .delete(API + "/upload/files/" + Number(file.name), {
+    //     headers: {
+    //       Authorization: `Bearer ${UState.jwt}`,
+    //     },
+    //   })
+    //   .then((response) => {})
+    //   .catch((error) => {
+    //     console.log("Error al borrar las imagenes");
+    //   });
+  }
+
   return (
     <div className="medium-width centering-t">
       <form onSubmit={save}>
@@ -106,6 +142,7 @@ export default function RegisterModify({
               setFiles={setProfile}
               amount={1}
               images={profile_link}
+              setToDelete={setToDelete}
             />
           </Grid>
 
@@ -147,31 +184,35 @@ export default function RegisterModify({
           </Grid>
           <Divider />
 
-          <Grid item xs={6}>
-            <TextField
-              required={register}
-              name="password"
-              value={user.password}
-              onChange={handleChange}
-              type="password"
-              label="Contraseña"
-              variant="filled"
-              className="w-100"
-            />
-          </Grid>
+          {register && (
+            <>
+              <Grid item xs={6}>
+                <TextField
+                  required={register}
+                  name="password"
+                  value={user.password}
+                  onChange={handleChange}
+                  type="password"
+                  label="Contraseña"
+                  variant="filled"
+                  className="w-100"
+                />
+              </Grid>
 
-          <Grid item xs={6}>
-            <TextField
-              required={register}
-              name="password_again"
-              value={user.password_again}
-              onChange={handleChange}
-              type="password"
-              label="Repetir contraseña"
-              variant="filled"
-              className="w-100"
-            />
-          </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  required={register}
+                  name="password_again"
+                  value={user.password_again}
+                  onChange={handleChange}
+                  type="password"
+                  label="Repetir contraseña"
+                  variant="filled"
+                  className="w-100"
+                />
+              </Grid>
+            </>
+          )}
 
           <Hidden xlDown={message === ""}>
             <Grid item xs={12}>
@@ -195,7 +236,7 @@ export default function RegisterModify({
               disabled={loading}
               className="centering"
             >
-              {"Registrar Usuario"}
+              {register?"Registrar Usuario":"Guardar"}
             </Button>
           </Grid>
 

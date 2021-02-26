@@ -1,14 +1,35 @@
 import React, { useState, useContext, useEffect } from "react";
 import Link from "next/link";
-import { Instagram, Facebook } from "@material-ui/icons/";
 
+import { UserState } from '../States/User'
+import { getLoggedUser } from '../Api/logged_user'
 //Material-UI
+import { Instagram, Facebook } from "@material-ui/icons/";
 import { Typography, Grid, AppBar, Toolbar } from "@material-ui/core/";
 import Alert from '../Components/Alert'
-
+import {setCookie} from 'nookies'
 //Componente que se muestra en la sección más baja de todas las vistas, es decir, el footer
 export default function Footer() {
+  const { UState, UDispatch} = useContext(UserState)
   const [contactanos, setcontactanos] = useState(false);
+
+  useEffect(async()=>{ 
+    if(UState?.jwt){
+      let user = await getLoggedUser(UState.jwt, UState.user.id)
+      UDispatch({type: "setUser", payload: {jwt: UState.jwt, user: user}})
+
+      setCookie(
+        null,
+        "session",
+        JSON.stringify({ user: user, jwt: UState.jwt }),
+        {
+          maxAge: 30 * 24 * 60 * 60,
+          path: "/",
+        }
+      );
+    }
+  },[])
+
   return (
     <>
       <Alert/>

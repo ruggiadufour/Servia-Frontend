@@ -14,7 +14,7 @@ export default function WrapperApp({children, session}) {
   return (
     <div className="main-container">
       <ThemeClasses theme={theme}>
-        <ProviderUserState session={session ? JSON.parse(session) : null}>
+        <ProviderUserState session={session}>
           <ProviderAlertState>
             <ThemeProvider theme={theme}>
               <CssBaseline />

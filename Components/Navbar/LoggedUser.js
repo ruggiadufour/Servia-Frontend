@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   IconButton,
   Badge,
@@ -20,33 +20,52 @@ import {
 
 import { UserState } from "../../States/User";
 import { destroyCookie } from "nookies";
+import Router from "next/router";
+import Link from "next/link";
 
 export default function LoggedUser() {
   const { UState, UDispatch } = useContext(UserState);
   const API = process.env.NEXT_PUBLIC_API;
+  
+  const [profileImage, setProfileImage] = useState("/Icono1.png");
+  useEffect(() => {
+    const isImage = UState.user.public_user.profile?.formats?.thumbnail?.url;
+    let img = isImage
+      ? API + UState.user.public_user.profile.formats.thumbnail.url
+      : "/Icono1.png";
+
+    setProfileImage(img);
+  }, [UState]);
 
   const [despPerf, setdespPerf] = useState(null);
   const [despNoti, setdespNoti] = useState(null);
 
   //Métodos utilizados cuando se despliegan y pliegan los menúes de la barrad de navegación
-  const desplegarPerfil = (event) => {
+  const openProfileContext = (event) => {
     setdespPerf(event.currentTarget);
   };
-  const plegarPerfil = () => {
+  const closeProfileContext = () => {
     setdespPerf(null);
   };
-  const desplegarNoti = (event) => {
+  const openNotifContext = (event) => {
     setdespNoti(event.currentTarget);
   };
-  const plegarNoti = () => {
+  const closeNotifContext = () => {
     setdespNoti(null);
   };
 
   function logOut() {
-    UDispatch({ type: "cleanUser" });
     destroyCookie(null, "session");
+    UDispatch({ type: "cleanUser" });
     setdespPerf(null);
+    Router.push("/");
   }
+
+  function goTo(url) {
+    closeProfileContext();
+    Router.push(url);
+  }
+
   return (
     <div className="logged">
       {/*Desplegar perfil*/}
@@ -55,13 +74,13 @@ export default function LoggedUser() {
         aria-label="account of current user"
         aria-haspopup="true"
         color="inherit"
-        onClick={desplegarPerfil}
+        onClick={openProfileContext}
         style={{ position: "relative" }}
       >
         {/* <AccountCircle /> */}
-        <img
-          src={API + UState.user.public_user.profile?.formats?.thumbnail?.url}
-        />
+
+        <img src={profileImage} alt="Icono profile logo" />
+
         <p className="icon-profile">🔨</p>
       </IconButton>
       <Menu
@@ -69,53 +88,50 @@ export default function LoggedUser() {
         anchorEl={despPerf}
         keepMounted
         open={Boolean(despPerf)}
-        onClose={plegarPerfil}
+        onClose={closeProfileContext}
       >
-        <MenuItem onClick={plegarPerfil}>
-          <a href="#">
-            <ListItemIcon>
-              <Avatar
-                style={{ color: "gray", width: "20px", height: "20px" }}
-                src="/IconoV3.png"
-                variant="square"
-                fontSize="small"
-              />
-            </ListItemIcon>
-            <Typography variant="inherit">Modificar mi perfil</Typography>
-          </a>
+        <MenuItem
+          onClick={() => {
+            goTo("/perfil/modificar");
+          }}
+        >
+          <ListItemIcon>👩‍💼</ListItemIcon>
+          <Typography variant="inherit">Modificar mi perfil</Typography>
         </MenuItem>
 
         <div>
-          <MenuItem onClick={plegarPerfil}>
+          <MenuItem
+            onClick={() => {
+              goTo("/perfil/proveedor/modificar");
+            }}
+          >
             <ListItemIcon>
-              <ModificarPerfil fontSize="small" />
+              {/* <ModificarPerfil fontSize="small" /> */}
+              👨‍🔧
             </ListItemIcon>
-            <a href="#">
-              <Typography variant="inherit">
-                Modificar mi perfil de proveedor
-              </Typography>
-            </a>
+            <Typography variant="inherit">
+              Modificar mi perfil de proveedor
+            </Typography>
           </MenuItem>
         </div>
 
         <div>
-          <MenuItem onClick={plegarPerfil}>
-            <ListItemIcon>
-              <Perfil fontSize="small" />
-            </ListItemIcon>
-            <a href="#">
-              <Typography variant="inherit">
-                Ver mi perfil de proveedor
-              </Typography>
-            </a>
+          <MenuItem
+            onClick={() => {
+              goTo("/perfiles?id=" + UState?.user.public_user.id);
+            }}
+          >
+            <ListItemIcon>👩‍🏫</ListItemIcon>
+
+            <Typography variant="inherit">
+              Ver mi perfil de proveedor
+            </Typography>
           </MenuItem>
         </div>
 
         <div>
-          <MenuItem onClick={plegarPerfil}>
-            <ListItemIcon>
-              <PriorityHighIcon fontSize="small" />
-            </ListItemIcon>
+          <MenuItem onClick={closeProfileContext}>
+            <ListItemIcon>🕵️‍♂️</ListItemIcon>
             <a href="#">
               <Typography variant="inherit">Verificar mi identidad</Typography>
             </a>
@@ -123,15 +139,13 @@ export default function LoggedUser() {
         </div>
 
         <MenuItem onClick={logOut}>
-          <ListItemIcon>
-            <ExitToAppIcon fontSize="small" />
-          </ListItemIcon>
+          <ListItemIcon>👋</ListItemIcon>
           <Typography variant="inherit">Cerrar sesión</Typography>
         </MenuItem>
       </Menu>
 
       {/*Desplegar notificaciones*/}
-      <IconButton color="inherit" onClick={desplegarNoti}>
+      <IconButton color="inherit" onClick={openNotifContext}>
         <Badge badgeContent={1} color="secondary">
           <NotificationsIcon />
         </Badge>
@@ -141,7 +155,7 @@ export default function LoggedUser() {
         anchorEl={despNoti}
         keepMounted
         open={Boolean(despNoti)}
-        onClose={plegarNoti}
+        onClose={closeNotifContext}
       >
         Notification component
       </Menu>
@@ -169,10 +183,11 @@ export default function LoggedUser() {
             top: 0;
             right: 0;
           }
-          img{
+          img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
+            object-fit: cover;
           }
         `}
       </style>
