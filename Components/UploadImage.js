@@ -5,7 +5,7 @@ import axios from "axios";
 
 import {UserState} from '../States/User'
 //Componente utilizado para la carga de imágenes en el sitio
-const SingleFileAutoSubmit = ({ setFiles, images, amount, setToDelete }) => {
+const SingleFileAutoSubmit = ({ setFiles, Files, preloadImages, amount, setToDelete }) => {
   const {UState} = useContext(UserState)
 
   const API = process.env.NEXT_PUBLIC_API;
@@ -31,12 +31,12 @@ const SingleFileAutoSubmit = ({ setFiles, images, amount, setToDelete }) => {
 
   useEffect(async () => {
     let files = await Promise.all(
-      images.map(async (image) => {
+      preloadImages.map(async (image) => {
         return await convertToFile(image);
       })
     );
     setInitialFiles(files);
-  }, [images]);
+  }, [preloadImages]);
 
   //Se ejecuta cada vez que cambia el estado del componente
   const handleChangeStatus = ({ meta, file }, status) => {
@@ -45,6 +45,8 @@ const SingleFileAutoSubmit = ({ setFiles, images, amount, setToDelete }) => {
       let deletedSome = initialFiles.some((fileLoaded) => fileLoaded === file);
       if (deletedSome) {
         setToDelete(Number(file.name))
+      }else{
+        setFiles(Files.filter(File => File!==file))
       }
     }
     if (status === "uploading") {
@@ -54,13 +56,13 @@ const SingleFileAutoSubmit = ({ setFiles, images, amount, setToDelete }) => {
 
       //if is uploaded we dont setFiles, so in modificar we don't save a new file
       if(!isUploaded){
-        setFiles(file);
+        setFiles([...Files, file]);
       }
     }
   };
 
   return (
-    <React.Fragment>
+    <>
       <Dropzone
         //getUploadParams={getUploadParams}
         onChangeStatus={handleChangeStatus}
@@ -71,13 +73,13 @@ const SingleFileAutoSubmit = ({ setFiles, images, amount, setToDelete }) => {
         canCancel={false}
         accept="image/*"
         inputWithFilesContent={"Subir otra imagen"}
-        inputContent={`Selecciona ${amount} imagenes`}
+        inputContent={amount===1?`Selecciona${amount} imagen`:`Selecciona hasta ${amount} imagenes`}
         styles={{
           dropzone: { width: "100%", height: "100%", overflow: "auto" },
           dropzoneActive: { borderColor: "green" },
         }}
       />
-    </React.Fragment>
+    </>
   );
 };
 

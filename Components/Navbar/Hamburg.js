@@ -1,7 +1,11 @@
-import {useState} from 'react'
-import {IconButton, MenuItem, Typography, Menu} from '@material-ui/core'
+import {useContext, useState} from 'react'
+import {IconButton, MenuItem, Menu} from '@material-ui/core'
 import {Menu as MenuIcon} from '@material-ui/icons'
+
+import {UserState} from '../../States/User'
 export default function Hamburg() {
+  const {UState} = useContext(UserState)
+
   const [despMenu, setdespMenu] = useState(null);
   const desplegarMenu = (event) => {
     setdespMenu(event.currentTarget);
@@ -26,21 +30,6 @@ export default function Hamburg() {
         open={Boolean(despMenu)}
         onClose={plegarMenu}
       >
-        <a
-          href="#"
-        >
-          <MenuItem onClick={plegarMenu}>Crear una nueva cuenta</MenuItem>
-          <hr />
-        </a>
-
-        <a
-          href="#"
-        >
-          <MenuItem onClick={plegarMenu}>
-            <Typography variant="inherit">Explorar servicios</Typography>
-          </MenuItem>
-        </a>
-
         {/*Usuario*/}
         <div>
           <a
@@ -56,7 +45,7 @@ export default function Hamburg() {
         </div>
 
         {/*Proveedor*/}
-        <div>
+        <div hidden={UState?.user.type===1}>
           <a
             href="#"
           >
@@ -70,7 +59,7 @@ export default function Hamburg() {
         </div>
 
         {/*Administrador*/}
-        <div >
+        <div hidden={UState?.user.role.id!==2}>
           <a
             href="#"
           >

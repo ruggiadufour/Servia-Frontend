@@ -76,10 +76,11 @@ export default function LoggedUser() {
         color="inherit"
         onClick={openProfileContext}
         style={{ position: "relative" }}
+        className="background-secondary-2"
       >
         {/* <AccountCircle /> */}
 
-        <img src={profileImage} alt="Icono profile logo" />
+        <img className="background-secondary-2" src={profileImage} alt="Icono profile logo" />
 
         <p className="icon-profile">🔨</p>
       </IconButton>
@@ -95,25 +96,9 @@ export default function LoggedUser() {
             goTo("/perfil/modificar");
           }}
         >
-          <ListItemIcon>👩‍💼</ListItemIcon>
+          <ListItemIcon>👨‍🔧</ListItemIcon>
           <Typography variant="inherit">Modificar mi perfil</Typography>
         </MenuItem>
-
-        <div>
-          <MenuItem
-            onClick={() => {
-              goTo("/perfil/proveedor/modificar");
-            }}
-          >
-            <ListItemIcon>
-              {/* <ModificarPerfil fontSize="small" /> */}
-              👨‍🔧
-            </ListItemIcon>
-            <Typography variant="inherit">
-              Modificar mi perfil de proveedor
-            </Typography>
-          </MenuItem>
-        </div>
 
         <div>
           <MenuItem

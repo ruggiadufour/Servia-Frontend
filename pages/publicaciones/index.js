@@ -26,7 +26,12 @@ export async function getServerSideProps({ query }) {
   }
   if (query.category_id) {
     q["category_id"] = query.category_id;
+  }
+  if (query.type) {
     q["type"] = query.type;
+  }
+  if(query.public_user){
+    q["public_user"] = query.public_user
   }
 
   const data = await getPublications(q);

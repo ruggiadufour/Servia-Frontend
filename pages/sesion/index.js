@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 //Material UI
 import {
   Grid,
@@ -10,17 +10,18 @@ import {
   Divider,
 } from "@material-ui/core";
 
+//Set state and cookies
 import axios from "axios";
 import { setCookie } from "nookies";
 import { useRouter } from "next/router";
+import { UserState } from "../../States/User";
 import Link from "next/link";
-import {UserState} from '../../States/User'
 
 export default function IniciarSesion({ mensaje }) {
-  const { UDispatch } = useContext(UserState)
+  const { UDispatch } = useContext(UserState);
   const API = process.env.NEXT_PUBLIC_API;
   const router = useRouter();
-  
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [data, setData] = useState({
@@ -42,7 +43,7 @@ export default function IniciarSesion({ mensaje }) {
 
     axios
       .post(
-        API+"/auth/local",
+        API + "/auth/local",
         {
           identifier: data.identifier,
           password: data.password,
@@ -55,7 +56,6 @@ export default function IniciarSesion({ mensaje }) {
       )
       .then((response) => {
         console.log("Well done!");
-        console.log(response.data)
         setCookie(
           null,
           "session",
@@ -69,19 +69,19 @@ export default function IniciarSesion({ mensaje }) {
         UDispatch({
           type: "setUser",
           payload: { user: response.data.user, jwt: response.data.jwt },
-        });  
+        });
 
         setLoading(false);
-        // router.push("/");
+        router.push("/");
       })
       .catch((error) => {
-        console.log(error.response)
+        console.log(error.response);
         let err = JSON.parse(error.response.request.response).message[0]
           .messages[0].id;
         if (err === "Auth.form.error.invalid")
-        setMessage("Correo o contraseña incorrectos");
+          setMessage("Correo o contraseña incorrectos");
 
-          setLoading(false);
+        setLoading(false);
       });
   }
 
@@ -127,7 +127,9 @@ export default function IniciarSesion({ mensaje }) {
           </Hidden>
 
           <Grid item xs={12} align="center">
-            <a href="#" className="centering text-secondary-1">Olvidé mi contraseña</a>
+            <a href="#" className="centering text-secondary-1">
+              Olvidé mi contraseña
+            </a>
           </Grid>
 
           <div hidden={!loading} className="w-100">

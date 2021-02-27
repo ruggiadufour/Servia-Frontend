@@ -3,6 +3,7 @@ import "../styles/globals.css";
 //Framework
 import { parseCookies } from "nookies";
 import Router from "next/router";
+import { getLoggedUser } from '../Api/logged_user'
 //Components
 import Nav from "../Components/Navbar/Nav";
 import Footer from "../Components/Footer";
@@ -43,12 +44,13 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   }
 
   const session = parseCookies(ctx).session;
-
-  let getSession = null
-  if(session){
-    getSession = JSON.parse(session)
-  }
   
+  let sessionUp = null
+  if(session){
+    const parsed = JSON.parse(session)
+    let user = await getLoggedUser(parsed.jwt, parsed.user.id)
+    sessionUp = {user: user, jwt: parsed.jwt}
+  }
 
   if (!session) {
     if (ctx.pathname === "/perfil/modificar" || ctx.pathname === "/perfil/proveedor/modificar") {
@@ -58,13 +60,20 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
     if (ctx.pathname === "/sesion" || ctx.pathname === "/sesion/registrar") {
       redirectUser(ctx, "/");
     }
-   
+
+    if(ctx.pathname === "/admin" && sessionUp?.user.role.id!==2){
+      redirectUser(ctx, "/");
+    }
+
+    if(ctx.pathname === "/proveedor" && sessionUp?.user.type!==2){
+      redirectUser(ctx, "/");
+    }
   }
 
   // Destroy
   // nookies.destroy(ctx, 'cookieName')
 
-  return { pageProps, session: getSession };
+  return { pageProps, session: sessionUp };
 };
 
 function redirectUser(ctx, location) {

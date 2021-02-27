@@ -1,56 +1,36 @@
 import { useState, useContext } from "react";
 import axios from "axios";
 import Router from "next/router";
+import { setCookie } from "nookies";
 //States
 import { AlertState } from "../../States/Alert";
 import { UserState } from "../../States/User";
-import { setCookie } from "nookies";
 import RegisterModify from "../../Components/Session/Register-Modify";
 
-//Componente utilizado para registrar un nuevo usuario o para modificar los datos de un usuario
 export default function SignIn() {
   const API = process.env.NEXT_PUBLIC_API;
   const { ADispatch } = useContext(AlertState);
   const { UDispatch } = useContext(UserState);
 
-  //Variables de la página
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState(null);
-  const [isProvider, setIsProvider] = useState(false);
-
-  //Variables de los campos
-  const [profileImage, setProfileImage] = useState([]);
-  const [user, setUser] = useState({
-    name: "",
-    surname: "",
-    email: "",
-    username: "",
-    phone: "",
-    password: "",
-    password_again: "",
-    dni: "",
-    description: "",
-  });
+  const [profile, setProfile] = useState([]);
 
   return (
     <RegisterModify
-      user={user}
-      setUser={setUser}
       submit={signIn}
       loading={loading}
+      setLoading={setLoading}
       message={message}
+      setMessage={setMessage}
       setProfile={setProfile}
-      setIsProvider={setIsProvider}
-      isProvider={isProvider}
+      profile={profile}
       register={true}
     />
   );
 
-  //Función que se ejecuta si se quiere crear un usuario nuevo
-  async function signIn() {
-    setLoading(true);
-    let formData = getFormData();
+  async function signIn(user) {
+    let formData = getFormData(user);
 
     axios
       .post(API + "/auth/local/register", formData, {
@@ -59,6 +39,7 @@ export default function SignIn() {
         },
       })
       .then((response) => {
+        console.log(response.data)
         setLoading(false);
 
         ADispatch({
@@ -70,11 +51,6 @@ export default function SignIn() {
           },
         });
 
-        UDispatch({
-          type: "setUser",
-          payload: { user: response.data.user, jwt: response.data.jwt },
-        });
-
         setCookie(
           null,
           "session",
@@ -84,6 +60,12 @@ export default function SignIn() {
             path: "/",
           }
         );
+
+        UDispatch({
+          type: "setUser",
+          payload: { user: response.data.user, jwt: response.data.jwt },
+        });
+
         Router.push("/");
       })
       .catch((error) => {
@@ -110,9 +92,9 @@ export default function SignIn() {
       });
   }
   
-  function getFormData() {
+  function getFormData(user) {
     const formData = new FormData();
-    if (profile) formData.append("files.profile", profile);
+    if (profile.length!==0) formData.append("files.profile", profile[0]);
 
     formData.append(
       "data",
@@ -121,8 +103,7 @@ export default function SignIn() {
           username: user.username,
           email: user.email,
           password: user.password,
-          dni: user.dni,
-          type: isProvider ? 2 : 1,
+          type: user.type,
           waiting_verification: false,
         },
         public_usr: {
@@ -135,7 +116,10 @@ export default function SignIn() {
           description: user.description,
           state: false,
           location: "",
-          id_private: null,
+          province: user.province,
+          city: user.city,
+          categories: user.categories,
+          //id_private: null,
         },
       })
     );

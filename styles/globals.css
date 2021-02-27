@@ -1,4 +1,5 @@
 @import "~react-image-gallery/styles/css/image-gallery.css";
+@import "~nprogress/nprogress.css";
 
 * {
   box-sizing: border-box;
@@ -39,7 +40,7 @@ a {
   max-width: 1200px;
 }
 .medium-width{
-  max-width: 500px;
+  max-width: 600px;
 }
 
 .flex-col {
@@ -69,6 +70,10 @@ a {
 .select {
   padding: 15px;
   font-size: 15px;
+  background-color: #0002;
+  border: none;
+  border-bottom: solid thin gray;
+  border-radius: 4px 4px 0 0;
 }
 
 /* Butttons */
@@ -99,4 +104,20 @@ a {
   height:150px!important;
   width:150px!important;
   margin: auto;
+  object-fit: cover;
+}
+
+.rounded-span{
+  border-radius: 30px;
+  padding: 8px;
+  margin: 10px;
+}
+
+/* nprogres */
+#nprogress .bar{
+  background-color: red!important;
+}
+#nprogress .spinner-icon{
+  border-top-color: red!important;
+  border-left-color: red!important;
 }
