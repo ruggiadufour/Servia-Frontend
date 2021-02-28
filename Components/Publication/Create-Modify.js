@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
 //Material-UI
 import {
   Typography,
@@ -7,50 +6,52 @@ import {
   FormControl,
   Button,
   Grid,
+  LinearProgress
 } from "@material-ui/core";
-
-import { LinearProgress } from "@material-ui/core/";
 import UploadImage from "../../Components/UploadImage";
 import { UserState } from "../../States/User";
-
+//API client
 import { getCategories } from "../../Api/categories";
-//Componente utilizado para crear o modificar publicaciones o solicitudes de servicios
+import { deleteFile } from "../../Api/uploadAPI";
+
+import {useRouter} from 'next/router'
+
 export default function CreateModify({
   type,
   modify,
   loading,
   setLoading,
   submit,
+  publicationModify,
 }) {
+  const router = useRouter()
   const { UState } = useContext(UserState);
+  //States
   const [categories, setCategories] = useState([]);
   const [images, setImages] = useState([]);
-
-  //Datos de la pagina
+  const [toDeleteIds, setToDeleteIds] = useState([]);
   const [data, setData] = useState({
-    title: "",
-    price: 0,
-    description: "",
+    title: modify ? publicationModify.title : "",
+    price: modify ? publicationModify.price : 0,
+    description: modify ? publicationModify.description : "",
     type: type,
-    category: null,
+    category: modify ? publicationModify.category.id : "",
     public_user: UState?.user.public_user.id,
-    category: "",
   });
 
   useEffect(async () => {
+    //Setting select categories 
     const cat = await getCategories();
     setCategories(cat);
-    setData({
-      ...data,
-      category: cat[0].id,
-    });
+    if (!modify) {
+      setData({
+        ...data,
+        category: cat[0].id,
+      });
+    }
   }, []);
 
-  useEffect(async () => {
-      console.log(images)
-  }, [images]);
-
-  //Funcion para captar los cambios en los inputs
+  //Handle input change
   function handleChange(e) {
     setData({
       ...data,
@@ -58,21 +59,34 @@ export default function CreateModify({
     });
   }
 
+  //Setting selected category
   function selectCategory(e) {
-      const category = JSON.parse(e.target.value);
-      console.log(category)
+    const category = JSON.parse(e.target.value);
     setData({
       ...data,
       category: category,
     });
   }
 
-  function cancel() {}
+  //Save the data
+  async function save(e) {
+    e.preventDefault();
+    setLoading(true);
 
-  function save(e) {
-      e.preventDefault();
-    setLoading(true)
+    await Promise.all(toDeleteIds.map(async (id_delete)=>{
+      await deleteFile(id_delete, UState.jwt)
+    }))
+    
     submit(data, images);
+  }
+
+  //If the user deleted a preload image, then we save the id to later delete from the server
+  function toDelete(id){
+    setToDeleteIds((prev)=>[...prev, id])
+  }
+
+  function cancel() {
+    router.push(`/publicaciones?type=${type}&public_users=${UState.user.id}`)
   }
 
   return (
@@ -88,7 +102,9 @@ export default function CreateModify({
           >
             <Grid item xs={12}>
               <Typography variant="h5" component="h1" align="center">
-                {modify ? "Modificar publicación" : "Crear publicación"}
+                {modify
+                  ? `Modificar ${type ? "publicación" : "solicitud"}`
+                  : `Crear ${type ? "publicación" : "solicitud"}`}
               </Typography>
             </Grid>
 
@@ -156,8 +172,8 @@ export default function CreateModify({
                 setFiles={setImages}
                 Files={images}
                 amount={5}
-                preloadImages={[]}
-                setToDelete={() => {console.log("deleting")}}
+                preloadImages={modify?publicationModify.images:[]}
+                setToDelete={toDelete}
               />
             </Grid>
 

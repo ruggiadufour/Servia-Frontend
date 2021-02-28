@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export function deleteFile(id, jwt, thenCall, errorCall) {
+export function deleteFile(id, jwt, thenCall = () => {}, errorCall = () => {}) {
   const API = process.env.NEXT_PUBLIC_API;
 
   axios
@@ -10,9 +10,11 @@ export function deleteFile(id, jwt, thenCall, errorCall) {
       },
     })
     .then((response) => {
-      thenCall()
+      thenCall();
+      console.log(response.data);
     })
     .catch((error) => {
-      errorCall()
+      console.log(error);
+      errorCall();
     });
 }

@@ -1,15 +1,11 @@
 import React, {useState} from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@material-ui/core';
 
-//Alerta que utilizamos cuando se necesita confirmar alguna acción
-export default function Alerta({titulo, funcionAceptar, mensaje}) {
+export default function Alerta({title, message, callback}) {
   const [open, setOpen] = useState(true);
-  const [cargando, setcargando] = useState(false)
-  //Ejecutamos la función que se pasa como parámetro
+
   const handleClose = (boole) => {
-    setcargando(true)
-    funcionAceptar(boole)
-    setcargando(false)
+    callback(boole)
     setOpen(false);
   };
 
@@ -21,14 +17,14 @@ export default function Alerta({titulo, funcionAceptar, mensaje}) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{titulo}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {mensaje}
+            {message}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>{handleClose(false)}} variant="contained" color="error">
+          <Button onClick={()=>{handleClose(false)}} variant="contained" color="secondary">
             Cancelar
           </Button>
           <Button onClick={()=>{handleClose(true)}} variant="contained" color="primary" autoFocus>

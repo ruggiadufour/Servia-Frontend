@@ -34,8 +34,8 @@ export default function Navbar() {
     }
 
     aux_filters["word"] = word;
-
-    let query = "?";
+    
+    let query = `?province=${filters.province}&city=${filters.city}&`;
 
     if (
       !aux_filters.is_profile === undefined ||
@@ -53,7 +53,11 @@ export default function Navbar() {
   }
 
   function cleanFilters() {
-    setFilters(null);
+    setFilters({ province: filters.province, city: filters.city });
+  }
+
+  function setFiltersCall(filters_){
+    setFilters(filters_)
   }
 
   return (
@@ -67,9 +71,9 @@ export default function Navbar() {
         </div>
 
         {/* Publication filter */}
-        <div className={`${styles.filters}`}>
+        <div className={`${styles.filters} flex-col`}>
           {/* Input and buttons */}
-          <div className={styles.filters__input}>
+          <div className={`${styles.filters__input}`}>
             <input
               type="text"
               className={styles.input_search}
@@ -80,24 +84,35 @@ export default function Navbar() {
               }}
             />
             <button
-              className="button-left background-secondary-2"
-              onClick={search}
-            >
-              🔎
-            </button>
-            <button
+              className="button-center"
               onClick={() => {
                 setOpenFilters(true);
               }}
-              className="button-right background-secondary-2"
             >
-              <span>🚩</span>
+              🚩
+            </button>
+            <button
+              onClick={search}
+              className="button-right"
+            >
+              <span>🔎</span>
             </button>
           </div>
 
           {/* Data displayed on selecting filters */}
-          <div className={styles.filters__info}>
-            {filters && filters.category_id && (
+          <div className={`${styles.filters__info} `}>
+            <strong><span className={styles.span}>{"🚩 Filtros: "}</span></strong>
+            {filters && (
+              <>
+                <span className={`${styles.span} ${styles.category}`}>
+                  {filters.province}
+                </span>
+                <span className={`${styles.span} ${styles.category}`}>
+                  {filters.city}
+                </span>
+              </>
+            )}
+            {filters?.category_id && (
               <>
                 <button
                   className={`${styles.button_clean}`}
@@ -105,7 +120,6 @@ export default function Navbar() {
                 >
                   ❌
                 </button>
-                <span className={styles.span}>{"Buscando: "}</span>
                 <span className={`${styles.span} ${styles.type}`}>
                   {filters.is_profile
                     ? "Perfiles"
@@ -124,7 +138,7 @@ export default function Navbar() {
           <Filters
             open={openFilters}
             setOpen={setOpenFilters}
-            applyFilters={setFilters}
+            applyFilters={setFiltersCall}
           />
         </div>
 

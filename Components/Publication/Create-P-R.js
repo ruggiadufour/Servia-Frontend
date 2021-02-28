@@ -7,14 +7,14 @@ import { createPublication, modifyPublication } from "../../Api/publications";
 
 import CreateModify from "../../Components/Publication/Create-Modify";
 
-export default function CreatePubReq({type, modify}) {
+export default function CreatePubReq({type, modify, publicationModify = null}) {
   const router = useRouter();
   const { UState } = useContext(UserState);
   const { ADispatch } = useContext(AlertState);
   const [loading, setLoading] = useState(false);
 
   async function save(publication, images) {
-    if (images.length === 0) {
+    if (!modify && images.length === 0) {
       setLoading(false);
       ADispatch({
         type: "setAlert",
@@ -32,7 +32,7 @@ export default function CreatePubReq({type, modify}) {
       const res = await createPublication(publication, images, UState.jwt);
       error = res.error
     }else{
-      const res = await modifyPublication(publication, images, UState.jwt);
+      const res = await modifyPublication(publicationModify.id, publication, images, UState.jwt);
       error = res.error
     }
 
@@ -54,7 +54,7 @@ export default function CreatePubReq({type, modify}) {
           open: true,
         },
       });
-      router.push(`/publicaciones?type=${type}&public_user=${UState?.user.public_user.id}`)
+      router.push(`/${type?"publicaciones":"solicitudes"}/mias`)
     }
 
     setLoading(false);
@@ -67,6 +67,7 @@ export default function CreatePubReq({type, modify}) {
         submit={save}
         modify={modify}
         type={type}
+        publicationModify={publicationModify}
       />
     </>
   );

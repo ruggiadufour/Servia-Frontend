@@ -390,7 +390,7 @@ export default function RegisterModify({
               color="primary"
               disabled={loading}
             >
-              {register ? "Registrar Usuario" : "Guardar"}
+              {register ? "Registrar" : "Guardar"}
             </Button>
           </Grid>
           <Grid item xs={6} align="center">

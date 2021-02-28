@@ -41,7 +41,7 @@ export default function SignIn() {
       .then((response) => {
         console.log(response.data)
         setLoading(false);
-
+        
         ADispatch({
           type: "setAlert",
           payload: {
@@ -116,11 +116,13 @@ export default function SignIn() {
           description: user.description,
           state: false,
           location: "",
-          province: user.province,
-          city: user.city,
-          categories: user.categories,
+          categories: user.categories
           //id_private: null,
         },
+        location:{
+          city: user.city,
+          province: user.province,
+        }
       })
     );
 

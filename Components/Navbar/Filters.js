@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import List from "@material-ui/core/List";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
+//Styles
 import {
-  Chip,
-  Grid,
   Button,
   ListItem,
   FormControlLabel,
   Checkbox,
+  DialogTitle,
+  Dialog,
+  List,
 } from "@material-ui/core/";
-import { Done as Done, Clear as Clear } from "@material-ui/icons";
+//API-Client
 import { getCategories } from "../../Api/categories";
+import { getCities, getProvinces } from "../../Api/locations";
 
 export default function Filters({ open, setOpen, applyFilters }) {
   const [categories, setCategories] = useState([]);
@@ -20,36 +20,72 @@ export default function Filters({ open, setOpen, applyFilters }) {
     is_profile: false,
     typePublication: true,
   });
+  const [location, setLocation] = useState({
+    province: "Chaco",
+    city: "PRESIDENCIA ROQUE SAENZ PENA",
+  });
+  const [provinces, setProvinces] = useState([]);
+  const [cities, setCities] = useState([]);
 
+  //Close the dialog
   function handleClose() {
     setOpen(false);
   }
 
+  //First render callback
   useEffect(async () => {
+    //Setting first filters to see them in nav
+    applyFilters(location);
+
+    //Setting categories
     let res = await getCategories();
     if (res.length !== 0) {
-      setSelectedCat(res[0])
-      setFilters({...filters, category: res[0].name, category_id: res[0].id})
+      setSelectedCat(res[0]);
+      setFilters({ ...filters, category: res[0].name, category_id: res[0].id, ...location });
     }
     setCategories(res);
+
+    //Setting location
+    setProvinces(await getProvinces());
+    setCities(await getCities("Chaco"));
   }, []);
 
-  function selectCategory(e) {
-    let aux_cat = JSON.parse(e.target.value);
-    setSelectedCat(aux_cat)
+  //On select a province it has to update the city select
+  async function selectProvince(e) {
+    const province_ = e.target.value;
+    const cities_ = await getCities(province_);
+    setCities(cities_);
 
-    let filters_ = {}
+    setLocation({
+      province: province_,
+      city: cities_[0].nombre,
+    });
+  }
+
+  //On select a category, set filters
+  function selectCategory(e) {
+    setSelectedCat(e.target.value);
+    
+    let aux_cat = JSON.parse(e.target.value);
+    console.log(aux_cat)
+
+    let filters_ = {...filters};
     filters_["category_id"] = aux_cat.id;
     filters_["category"] = aux_cat.name;
 
-    setFilters({...filters, ...filters_});
+    setFilters({ ...filters, ...filters_, ...location });
   }
 
-  function saveFilters(){
-    applyFilters({...filters})
+  function saveFilters() {
+    console.log(filters)
+    applyFilters({ ...filters, ...location });
     setOpen(false);
   }
-  
+
+  useEffect(() => {
+    console.log(location);
+  }, [location]);
+
   return (
     <div>
       <Dialog
@@ -97,13 +133,12 @@ export default function Filters({ open, setOpen, applyFilters }) {
               </ListItem>
             </>
           )}
-
           <ListItem>
             <select
               name="select"
               className="w-100 select"
               onChange={selectCategory}
-              value={selectedCat?selectedCat.name:""}
+              value={selectedCat ? selectedCat : ""}
             >
               {categories.map((category, i) => (
                 <option key={i} value={JSON.stringify(category)}>
@@ -112,7 +147,42 @@ export default function Filters({ open, setOpen, applyFilters }) {
               ))}
             </select>
           </ListItem>
+
+          <h3 className="m-15">Locación</h3>
+          <ListItem>
+            <select
+              name="select"
+              className="select w-50 m-5"
+              onChange={selectProvince}
+              value={location.province}
+            >
+              {provinces.map((province, i) => (
+                <option key={i} value={province.nombre}>
+                  {province.nombre}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="select"
+              className="select w-50 m-5"
+              onChange={(e) => {
+                setLocation({
+                  ...location,
+                  city: e.target.value,
+                });
+              }}
+              value={location.city}
+            >
+              {cities.map((city, i) => (
+                <option key={i} value={city.nombre}>
+                  {city.nombre}
+                </option>
+              ))}
+            </select>
+          </ListItem>
         </List>
+
         <Button
           onClick={() => {
             setOpen(false);

@@ -1,10 +1,13 @@
-import {useContext, useState} from 'react'
-import {IconButton, MenuItem, Menu} from '@material-ui/core'
-import {Menu as MenuIcon} from '@material-ui/icons'
+import { useContext, useState } from "react";
+import { IconButton, MenuItem, Menu } from "@material-ui/core";
+import { Menu as MenuIcon } from "@material-ui/icons";
 
-import {UserState} from '../../States/User'
+import { useRouter } from "next/router";
+
+import { UserState } from "../../States/User";
 export default function Hamburg() {
-  const {UState} = useContext(UserState)
+  const { UState } = useContext(UserState);
+  const router = useRouter();
 
   const [despMenu, setdespMenu] = useState(null);
   const desplegarMenu = (event) => {
@@ -32,42 +35,58 @@ export default function Hamburg() {
       >
         {/*Usuario*/}
         <div>
-          <a
-            href="#"
+          <MenuItem
+            onClick={() => {
+              plegarMenu();
+              router.push("/solicitudes/crear");
+            }}
           >
-            <MenuItem onClick={plegarMenu}>Solicitar servicio</MenuItem>
-          </a>
-          <a
-            href="#"
+            🙋‍♂️ Solicitar servicio
+          </MenuItem>
+
+          <MenuItem
+            onClick={() => {
+              plegarMenu();
+              router.push(
+                `/solicitudes/mias`//?public_users=${UState.user.public_user.id}&type=false`
+              );
+            }}
           >
-            <MenuItem onClick={plegarMenu}>Mis servicios solicitados</MenuItem>
-          </a>
+            📃 Mis servicios solicitados
+          </MenuItem>
         </div>
 
         {/*Proveedor*/}
-        <div hidden={UState?.user.type===1}>
-          <a
-            href="#"
+        <div hidden={UState?.user.type === 1}>
+          <MenuItem
+            onClick={() => {
+              plegarMenu();
+              router.push(
+                `/publicaciones/crear`
+              );
+            }}
           >
-            <MenuItem onClick={plegarMenu}>Crear publicación</MenuItem>
-          </a>
-          <a
-            href="#"
+            🛠 Crear publicación
+          </MenuItem>
+
+          <MenuItem
+            onClick={() => {
+              plegarMenu();
+              router.push(
+                `/publicaciones/mias`//?public_users=${UState.user.public_user.id}&type=true`
+              );
+            }}
           >
-            <MenuItem onClick={plegarMenu}>Mis publicaciones</MenuItem>
-          </a>
+            📄 Mis publicaciones
+          </MenuItem>
         </div>
 
         {/*Administrador*/}
-        <div hidden={UState?.user.role.id!==2}>
-          <a
-            href="#"
-          >
+        <div hidden={UState?.user.role.id !== 2}>
+          <a href="#">
             <MenuItem onClick={plegarMenu}>Gestionar reportes</MenuItem>
           </a>
-          <a
-            href="#"
-          >
+          <a href="#">
             <MenuItem onClick={plegarMenu}>Verificar identidades </MenuItem>
           </a>
           {/*<a to={state.ruta+"/administrar-categorias"} className={classes.Estiloa}><MenuItem onClick={plegarMenu}>Administrar categorías </MenuItem></Link>*/}

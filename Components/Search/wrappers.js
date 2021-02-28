@@ -24,7 +24,7 @@ export function Wrapper2({ children }) {
       <style jsx>
         {`
           .row {
-            border: solid thin gray;
+            
             background-color: lightgray;
             padding: 10px;
             border-radius: 5px;

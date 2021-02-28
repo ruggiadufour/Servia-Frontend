@@ -60,11 +60,17 @@ a {
 .w-100 {
   width: 100%;
 }
+.w-50 {
+  width: 50%;
+}
 .p-15{
   padding: 15px;
 }
 .m-15{
   margin: 15px;
+}
+.m-5{
+  margin: 5px;
 }
 
 .select {
@@ -77,17 +83,17 @@ a {
 }
 
 /* Butttons */
-.button-left:focus, .button-right:focus {
+.button-left:focus, .button-right:focus, .button-center:focus {
   outline: none;
   background-color: lightgray;
 }
-.button-left, .button-right {
+.button-left, .button-right, .button-center {
   height: 45px;
   border: none;
   padding: 10px;
   margin: 5px 0;
 }
-.button-left:hover, .button-right:hover {
+.button-left:hover, .button-right:hover, .button-center:hover {
   cursor: pointer;
   background-color: #fff3
 }

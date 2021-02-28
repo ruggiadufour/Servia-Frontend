@@ -1,7 +1,7 @@
 //Material-UI
 import { Grid } from "@material-ui/core/";
 
-import { getPublication, getPublications } from "../../Api/publications";
+import { getPublication } from "../../Api/publications";
 import MainData from "../../Components/Publication/MainData";
 import ProfileOwner from "../../Components/Publication/ProfileOwner";
 

@@ -105,9 +105,13 @@ export default function Change() {
           location: "",
           province: user.province,
           city: user.city,
-          categories: user.categories,
+          categories: user.categories, 
           //id_private: UState.user.id,
         },
+        location:{
+          city: user.city,
+          province: user.province,
+        }
       })
     );
 

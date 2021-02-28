@@ -1,16 +1,24 @@
 import RowPublication from "../../Components/Search/RowPublication";
 import { getPublications } from "../../Api/publications";
 import {Wrapper1, Wrapper2} from "../../Components/Search/wrappers";
+import { useState } from "react";
 
 export default function Search({ publications }) {
+  const [thisPublications, setThisPublications] = useState(publications)
+
+  function removeOne(id) {
+    console.log(id)
+    setThisPublications(thisPublications.filter((pub) => pub.id !== id));
+  }
+
   return (
     <>
       <Wrapper1>
         {
           //Rendering publications
-          publications.map((publication, i) => (
+          thisPublications.map((publication, i) => (
             <Wrapper2 key={i}>
-              <RowPublication publication={publication} />
+              <RowPublication publication={publication} removeOne={removeOne}/>
             </Wrapper2>
           ))
         }
@@ -21,6 +29,11 @@ export default function Search({ publications }) {
 
 export async function getServerSideProps({ query }) {
   let q = {};
+  if(query.province && query.city){
+    q["province"] = query.province
+    q["city"] = query.city
+  }
+
   if (query.word) {
     q["word"] = query.word;
   }

@@ -62,7 +62,7 @@ export async function createPublication(publication, images, jwt) {
   }  
 }
 
-export async function modifyPublication(publication, images, jwt) {
+export async function modifyPublication(id, publication, images, jwt) {
   const formData = new FormData();
 
   for (let i = 0; i < images.length; i++) {
@@ -73,7 +73,7 @@ export async function modifyPublication(publication, images, jwt) {
 
   let data = null, error = null;
   try {
-    let res = await axios.post(API + "/create-publication", formData, {
+    let res = await axios.put(API + "/publications/"+id, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `bearer ${jwt}`,
@@ -81,6 +81,23 @@ export async function modifyPublication(publication, images, jwt) {
     })
     data = res.data;
 
+    return {data: data, error:error}
+  } catch (error) {
+    console.log(error.response)
+    return {data: data, error:error.response}
+  }  
+}
+
+export async function deletePublication(id, jwt) {
+  let data = null, error = null;
+  try {
+    let res = await axios.delete(API + "/publications/"+id, {
+      headers: {
+        Authorization: `bearer ${jwt}`,
+      },
+    })
+    data = res.data;
+    
     return {data: data, error:error}
   } catch (error) {
     console.log(error.response)

@@ -16,6 +16,11 @@ export default function Search({ profiles }) {
 
 export async function getServerSideProps({ query }) {
   let q = {};
+  if(query.province && query.city){
+    q["province"] = query.province
+    q["city"] = query.city
+  }
+  
   if (query.word) {
     q["word"] = query.word;
   }
@@ -24,7 +29,7 @@ export async function getServerSideProps({ query }) {
     q["type"] = query.type;
   }
   if(query.id){
-    q["id"] = query.id;
+    q["id"] = query.id; 
   }
 
   const data = await getUsers(q);
