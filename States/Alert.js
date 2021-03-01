@@ -10,7 +10,7 @@ const reducer = (state, action) => {
     case "setAlert":
       return action.payload ;
     case "cleanAlert":
-      return { ...initState, open: false };
+      return {...state, open:false};
     default:
       return state;
   }

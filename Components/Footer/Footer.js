@@ -4,7 +4,7 @@ import Link from "next/link";
 //Material-UI
 import { Instagram, Facebook } from "@material-ui/icons/";
 import { Typography, Grid, AppBar, Toolbar } from "@material-ui/core/";
-import Alert from '../Components/Alert'
+import Alert from '../../Components/Alert'
 
 //Componente que se muestra en la sección más baja de todas las vistas, es decir, el footer
 export default function Footer() {

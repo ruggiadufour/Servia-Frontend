@@ -3,28 +3,21 @@ import {
   IconButton,
   Badge,
   Menu,
-  ListItemIcon,
   MenuItem,
   Typography,
-  Avatar,
 } from "@material-ui/core";
 import {
-  Person as Perfil,
-  ExitToApp as ExitToAppIcon,
-  Create as ModificarPerfil,
   Chat,
-  AccountCircle,
   Notifications as NotificationsIcon,
-  PriorityHigh as PriorityHighIcon,
 } from "@material-ui/icons";
 
 import { UserState } from "../../States/User";
 import { destroyCookie } from "nookies";
-import Router from "next/router";
-import Link from "next/link";
+import {useRouter} from "next/router";
 
 export default function LoggedUser() {
   const { UState, UDispatch } = useContext(UserState);
+  const router = useRouter();
   const API = process.env.NEXT_PUBLIC_API;
   
   const [profileImage, setProfileImage] = useState("/Icono1.png");
@@ -54,16 +47,16 @@ export default function LoggedUser() {
     setdespNoti(null);
   };
 
-  function logOut() {
-    destroyCookie(null, "session");
+  async function logOut() {
+    await destroyCookie(null, "session");
     UDispatch({ type: "cleanUser" });
     setdespPerf(null);
-    Router.push("/");
+    router.push("/");
   }
 
   function goTo(url) {
     closeProfileContext();
-    Router.push(url);
+    router.push(url);
   }
 
   return (
@@ -96,8 +89,7 @@ export default function LoggedUser() {
             goTo("/perfil/modificar");
           }}
         >
-          <ListItemIcon>👨‍🔧</ListItemIcon>
-          <Typography variant="inherit">Modificar mi perfil</Typography>
+          <Typography variant="inherit">👨‍🔧 Modificar mi perfil</Typography>
         </MenuItem>
 
         <div>
@@ -106,26 +98,22 @@ export default function LoggedUser() {
               goTo("/perfiles?id=" + UState?.user.public_user.id);
             }}
           >
-            <ListItemIcon>👩‍🏫</ListItemIcon>
-
             <Typography variant="inherit">
-              Ver mi perfil de proveedor
+              👩‍🏫 Ver mi perfil de proveedor
             </Typography>
           </MenuItem>
         </div>
 
         <div>
-          <MenuItem onClick={closeProfileContext}>
-            <ListItemIcon>🕵️‍♂️</ListItemIcon>
-            <a href="#">
-              <Typography variant="inherit">Verificar mi identidad</Typography>
-            </a>
+          <MenuItem onClick={() => {
+              goTo("/perfil/verificar-identidad");
+            }}>
+              <Typography variant="inherit">🕵️‍♂️ Verificar mi identidad</Typography>
           </MenuItem>
         </div>
 
         <MenuItem onClick={logOut}>
-          <ListItemIcon>👋</ListItemIcon>
-          <Typography variant="inherit">Cerrar sesión</Typography>
+          <Typography variant="inherit">👋 Cerrar sesión</Typography>
         </MenuItem>
       </Menu>
 

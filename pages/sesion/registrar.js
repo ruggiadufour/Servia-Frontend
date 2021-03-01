@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import axios from "axios";
-import Router from "next/router";
+import {useRouter} from "next/router";
 import { setCookie } from "nookies";
 //States
 import { AlertState } from "../../States/Alert";
@@ -9,6 +9,7 @@ import RegisterModify from "../../Components/Session/Register-Modify";
 
 export default function SignIn() {
   const API = process.env.NEXT_PUBLIC_API;
+  const router = useRouter()
   const { ADispatch } = useContext(AlertState);
   const { UDispatch } = useContext(UserState);
 
@@ -39,7 +40,6 @@ export default function SignIn() {
         },
       })
       .then((response) => {
-        console.log(response.data)
         setLoading(false);
         
         ADispatch({
@@ -66,7 +66,7 @@ export default function SignIn() {
           payload: { user: response.data.user, jwt: response.data.jwt },
         });
 
-        Router.push("/");
+        router.push("/");
       })
       .catch((error) => {
         // Ocurrió un error
@@ -104,20 +104,15 @@ export default function SignIn() {
           email: user.email,
           password: user.password,
           type: user.type,
-          waiting_verification: false,
         },
         public_usr: {
           name: user.name,
           surname: user.surname,
-          blocked: false,
-          show_phone: true,
-          verified: false,
+          show_phone: user.show_phone,
           phone: user.phone,
           description: user.description,
-          state: false,
-          location: "",
+          state: user.state,
           categories: user.categories
-          //id_private: null,
         },
         location:{
           city: user.city,

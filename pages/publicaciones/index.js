@@ -2,6 +2,7 @@ import RowPublication from "../../Components/Search/RowPublication";
 import { getPublications } from "../../Api/publications";
 import {Wrapper1, Wrapper2} from "../../Components/Search/wrappers";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function Search({ publications }) {
   const [thisPublications, setThisPublications] = useState(publications)
@@ -9,6 +10,23 @@ export default function Search({ publications }) {
   function removeOne(id) {
     console.log(id)
     setThisPublications(thisPublications.filter((pub) => pub.id !== id));
+  }
+
+  if (thisPublications.length === 0) {
+    return (
+      <div className="centering flex-col">
+        <h1>
+          Lo sentimos, no encontramos resultados para los filtros aplicados.
+        </h1>
+
+        <Image
+          src="/search-not-found.png"
+          width={200}
+          height={200}
+          layout="intrinsic"
+        />
+      </div>
+    );
   }
 
   return (

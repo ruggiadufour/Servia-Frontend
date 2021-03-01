@@ -13,8 +13,8 @@ export default function Change() {
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState([0]);
-
+  const [profile, setProfile] = useState([]);
+  
   return (
     <RegisterModify
       submit={changeData}
@@ -82,7 +82,6 @@ export default function Change() {
   function getFormData(user) {
     const formData = new FormData();
     if (profile.length!==0) formData.append("files.profile", profile[0]);
-    console.log(user)
     formData.append(
       "data",
       JSON.stringify({
@@ -91,22 +90,15 @@ export default function Change() {
           email: user.email,
           //password: user.password,
           type: user.type,
-          //waiting_verification: false,
         },
         public_usr: {
           name: user.name,
           surname: user.surname,
-          blocked: false,
           show_phone: user.show_phone,
-          verified: false,
           phone: user.phone,
           description: user.description,
           state: user.state,
-          location: "",
-          province: user.province,
-          city: user.city,
           categories: user.categories, 
-          //id_private: UState.user.id,
         },
         location:{
           city: user.city,

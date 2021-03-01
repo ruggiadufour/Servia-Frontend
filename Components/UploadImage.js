@@ -5,7 +5,7 @@ import axios from "axios";
 
 import {UserState} from '../States/User'
 //Componente utilizado para la carga de imágenes en el sitio
-const SingleFileAutoSubmit = ({ setFiles, Files, preloadImages, amount, setToDelete }) => {
+const SingleFileAutoSubmit = ({ setFiles, Files, preloadImages, amount, setToDelete, disabled = false }) => {
   const {UState} = useContext(UserState)
 
   const API = process.env.NEXT_PUBLIC_API;
@@ -30,6 +30,7 @@ const SingleFileAutoSubmit = ({ setFiles, Files, preloadImages, amount, setToDel
   }
 
   useEffect(async () => {
+    console.log(preloadImages)
     let files = await Promise.all(
       preloadImages.map(async (image) => {
         return await convertToFile(image);
@@ -64,6 +65,7 @@ const SingleFileAutoSubmit = ({ setFiles, Files, preloadImages, amount, setToDel
   return (
     <>
       <Dropzone
+      disabled={disabled}
         //getUploadParams={getUploadParams}
         onChangeStatus={handleChangeStatus}
         maxFiles={amount}

@@ -6,7 +6,7 @@ import Router from "next/router";
 import { getLoggedUser } from '../Api/logged_user'
 //Components
 import Nav from "../Components/Navbar/Nav";
-import Footer from "../Components/Footer";
+import Footer from "../Components/Footer/Footer";
 import WrraperApp from "../Components/Wrapper_app";
 
 function MyApp({ Component, pageProps, session }) {

@@ -4,6 +4,9 @@ import RowPublication from "../../Components/Search/RowPublication";
 import { getPublications } from "../../Api/publications";
 import { Wrapper1, Wrapper2 } from "../../Components/Search/wrappers";
 
+import Image from "next/image";
+import Link from "next/link";
+
 export default function Mine() {
   const [publications, setPublications] = useState([]);
   const { UState } = useContext(UserState);
@@ -17,8 +20,25 @@ export default function Mine() {
   }, []);
 
   function removeOne(id) {
-    console.log(id)
+    console.log(id);
     setPublications(publications.filter((pub) => pub.id !== id));
+  }
+
+  if (publications.length === 0) {
+    return (
+      <div className="centering flex-col">
+        <h1>
+          No creaste ninguna solicitud todavía.
+          <br />
+          Hacelo haciendo{" "}
+          <Link href="/solicitudes/crear">
+            <a className="text-primary-2">click acá</a>
+          </Link>
+        </h1>
+
+        <Image src="/create.svg" width={200} height={200} layout="intrinsic" />
+      </div>
+    );
   }
 
   return (
@@ -29,7 +49,7 @@ export default function Mine() {
           //Rendering publications
           publications.map((publication, i) => (
             <Wrapper2 key={i}>
-              <RowPublication publication={publication} removeOne={removeOne}/>
+              <RowPublication publication={publication} removeOne={removeOne} />
             </Wrapper2>
           ))
         }
