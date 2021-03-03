@@ -6,6 +6,7 @@ import nProgress from "nprogress";
 export default function Layout({ children }) {
   const router = useRouter();
   useEffect(() => {
+    //nprogress
     const handleRouteChange = (url) => {
       NProgress.start();
     };

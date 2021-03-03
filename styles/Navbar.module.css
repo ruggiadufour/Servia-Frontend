@@ -8,9 +8,15 @@
 }
 .type,
 .category,
-.services {
+.services, .province, .city {
   padding: 5px;
   border-radius: 15px;
+}
+.province {
+  background-color: lightpink;
+}
+.city {
+  background-color: coral;
 }
 .type {
   background-color: lightgreen;
@@ -18,9 +24,7 @@
 .category {
   background-color: lightblue;
 }
-.services {
-  background-color: greenyellow;
-}
+
 
 .filters__info {
   position: relative;

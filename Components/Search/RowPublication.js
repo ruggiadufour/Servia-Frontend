@@ -21,6 +21,7 @@ import Verified from "@material-ui/icons/CheckCircleOutline";
 //Components
 import Stars from "../Estrellas";
 import AlertDialog from "../YesNoDialog";
+import Report from "../Publication/Report";
 
 //API client
 import { modifyPublication, deletePublication } from "../../Api/publications";
@@ -49,25 +50,27 @@ export default function RowPublication({ publication, removeOne }) {
     setOpenDialog(false);
     if (isTrue) {
       const { data } = await deletePublication(thisPublicaction.id, UState.jwt);
-      if(data)removeOne(thisPublicaction.id);
+      if (data) removeOne(thisPublicaction.id);
     }
+  }
+
+  function getImage() {
+    let image =
+      thisPublicaction.images.length !== 0
+        ? process.env.NEXT_PUBLIC_API + thisPublicaction.images[0].url
+        : "/IconoV2.png";
+    return image;
   }
 
   return (
     <div className="card-row background-2">
       <div className="card-img">
-        <img
-          src={
-            thisPublicaction.images.length === 0
-              ? "/IconoV2.png"
-              : process.env.NEXT_PUBLIC_API + thisPublicaction.images[0].url
-          }
-          alt="1° imagen"
-          className="image"
-        />
+        <img src={getImage()} alt="1° imagen" className="image" />
         <div
           className="manage-publication"
-          hidden={thisPublicaction.public_user.id === 0}
+          hidden={
+            !(thisPublicaction.public_user.id === UState?.user.public_user.id)
+          }
         >
           <Tooltip title="Editar publicación">
             <IconButton
@@ -107,6 +110,8 @@ export default function RowPublication({ publication, removeOne }) {
       </div>
 
       <div className="card-info">
+        <Report id={thisPublicaction.id} type={false} />
+
         <Typography align="left" component="h5" variant="h4">
           {thisPublicaction.title}
         </Typography>
@@ -176,6 +181,7 @@ export default function RowPublication({ publication, removeOne }) {
             padding: 10px;
             text-align: center;
             min-width: 280px;
+            position: relative;
           }
           .card-row {
             max-width: 500px;

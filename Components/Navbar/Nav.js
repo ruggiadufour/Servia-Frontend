@@ -9,11 +9,12 @@ import Image from "next/image";
 import Filters from "./Filters";
 import LoggedUser from "./LoggedUser";
 import Hamburg from "./Hamburg";
+import ThemeSelector from "./ThemeSelector";
 import { UserState } from "../../States/User";
 
 import styles from "../../styles/Navbar.module.css";
 
-export default function Navbar() {
+export default function Navbar({ setLDTheme }) {
   const router = useRouter();
   const { UState } = useContext(UserState);
 
@@ -34,30 +35,39 @@ export default function Navbar() {
     }
 
     aux_filters["word"] = word;
-    
+
     let query = `?province=${filters.province}&city=${filters.city}&`;
+
+    if (aux_filters.category_id) {
+      query += `category_id=${aux_filters.category_id}&`;
+    }
+
+    query += word !== "" ? "&word=" + word : "";
 
     if (
       !aux_filters.is_profile === undefined ||
       aux_filters.is_profile === true
     ) {
-      query += `category_id=${aux_filters.category_id}&word=${word}`;
       router.push(`/perfiles${query}`);
     } else {
       if (aux_filters.category_id)
         query += `category_id=${aux_filters.category_id}&type=${aux_filters.typePublication}`;
-      query += word !== "" ? "&word=" + word : "";
 
       router.push(`/publicaciones${query}`);
     }
   }
 
   function cleanFilters() {
-    setFilters({ province: filters.province, city: filters.city });
+    setFilters({
+      province: filters.province,
+      city: filters.city,
+      is_profile: true,
+    });
   }
 
-  function setFiltersCall(filters_){
-    setFilters(filters_)
+  function setFiltersCall(filters_) {
+    console.log(filters_);
+    setFilters(filters_);
   }
 
   return (
@@ -66,7 +76,9 @@ export default function Navbar() {
         <div className={styles.brand}>
           <Image src="/icono2.png" layout="intrinsic" width={75} height={75} />
           <Typography component="h1" variant="h5">
-            <Link href="/">Servia</Link>
+            <Link href="/">
+              <a className="servia servia-font">Servia</a>
+            </Link>
           </Typography>
         </div>
 
@@ -91,27 +103,33 @@ export default function Navbar() {
             >
               🚩
             </button>
-            <button
-              onClick={search}
-              className="button-right"
-            >
+            <button onClick={search} className="button-right">
               <span>🔎</span>
             </button>
           </div>
 
           {/* Data displayed on selecting filters */}
           <div className={`${styles.filters__info} `}>
-            <strong><span className={styles.span}>{"🚩 Filtros: "}</span></strong>
+            <strong>
+              <span className={styles.span}>{"🚩 Filtros: "}</span>
+            </strong>
             {filters && (
               <>
-                <span className={`${styles.span} ${styles.category}`}>
+                <span className={`${styles.span} ${styles.province}`}>
                   {filters.province}
                 </span>
-                <span className={`${styles.span} ${styles.category}`}>
+                <span className={`${styles.span} ${styles.city}`}>
                   {filters.city}
                 </span>
               </>
             )}
+            <span className={`${styles.span} ${styles.type}`}>
+              {filters?.is_profile
+                ? "Perfiles"
+                : filters?.typePublication
+                ? "Publicaciones"
+                : "Solicitudes de usuarios"}
+            </span>
             {filters?.category_id && (
               <>
                 <button
@@ -120,13 +138,6 @@ export default function Navbar() {
                 >
                   ❌
                 </button>
-                <span className={`${styles.span} ${styles.type}`}>
-                  {filters.is_profile
-                    ? "Perfiles"
-                    : filters.typePublication
-                    ? "Publicaciones"
-                    : "Solicitudes de usuarios"}
-                </span>
                 <span className={`${styles.span} ${styles.category}`}>
                   {filters.category}
                 </span>
@@ -170,7 +181,15 @@ export default function Navbar() {
             </button>
           </div>
         )}
+
+        <ThemeSelector setLDTheme={setLDTheme} />
       </div>
+
+      <style jsx>{`
+        .servia {
+          font-size: 2.5rem;
+        }
+      `}</style>
     </div>
   );
 }

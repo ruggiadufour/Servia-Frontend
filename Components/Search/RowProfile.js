@@ -12,13 +12,14 @@ import Verificado from "@material-ui/icons/CheckCircleOutline";
 
 //Componentes
 import Estrellas from "../Estrellas.js";
+import Report from '../Publication/Report'
 
 export default function RowProfile({ profile }) {
   function getImage() {
     let image = profile?.profile?.url
       ? process.env.NEXT_PUBLIC_API + profile.profile.url
       : "/IconoV2.png";
-    return image
+    return image;
   }
   return (
     <div className="card-row background-2">
@@ -28,7 +29,7 @@ export default function RowProfile({ profile }) {
 
       <div className="card-info">
         <Typography align="left" component="h5" variant="h5">
-          {`${profile.name} ${profile.surname}`}
+          {`‍${profile.name} ${profile.surname}`}
           <Hidden xlDown={true}>
             <Tooltip title="Usuario verificado">
               <IconButton style={{ padding: 1 }}>
@@ -38,9 +39,13 @@ export default function RowProfile({ profile }) {
           </Hidden>
         </Typography>
 
-        <Typography align="left" component="h5" variant="h5">
-          {profile.phone}
-        </Typography>
+        <Report id={profile.id} type={true}/>
+
+        {profile.show_phone && profile.phone.length !== 0 && (
+          <Typography align="left" component="h5" variant="h5">
+            {`📲 ${profile.phone}`}
+          </Typography>
+        )}
         <div
           style={{
             overflow: "auto",
@@ -55,11 +60,11 @@ export default function RowProfile({ profile }) {
         </div>
 
         <Typography color="secondary" align="left">
-          Publicaciones:{" "}
+          Servicios:{" "}
         </Typography>
 
-        {profile.publications.map((pub, i) => (
-          <Chip variant="outlined" label={pub.title} key={i} />
+        {profile.categories.map((cat, i) => (
+          <Chip variant="outlined" label={"✔ "+cat.name} key={i} />
         ))}
 
         <Estrellas valor={4} clickeable={false} cambiarValor={() => {}} />
@@ -83,13 +88,13 @@ export default function RowProfile({ profile }) {
             padding: 10px;
             text-align: center;
             min-width: 280px;
+            position: relative;
           }
           .card-row {
             max-width: 500px;
             height: 100%;
             display: flex;
             flex-wrap: wrap;
-
           }
         `}
       </style>

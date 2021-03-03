@@ -18,7 +18,7 @@ export default function Filters({ open, setOpen, applyFilters }) {
   const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState(null);
   const [filters, setFilters] = useState({
-    is_profile: false,
+    is_profile: true,
     typePublication: true,
   });
   const [location, setLocation] = useState({
@@ -35,9 +35,6 @@ export default function Filters({ open, setOpen, applyFilters }) {
 
   //First render callback
   useEffect(async () => {
-    //Setting first filters to see them in nav
-    applyFilters(location);
-
     //Setting categories
     let res = await getCategories();
     if (res.length !== 0) {
@@ -50,6 +47,9 @@ export default function Filters({ open, setOpen, applyFilters }) {
       });
     }
     setCategories(res);
+
+    //Setting initial filters to see them in nav
+    applyFilters({...location, is_profile: true, category_id: res[0].id, category: res[0].name}); 
 
     //Setting location
     setProvinces(await getProvinces());
@@ -117,7 +117,7 @@ export default function Filters({ open, setOpen, applyFilters }) {
           />
         </ListItem>
 
-        {!filters.is_profile && (
+        {!filters.is_profile && ( 
           <>
             <ListItem>
               <FormControlLabel

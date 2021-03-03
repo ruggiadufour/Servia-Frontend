@@ -10,15 +10,17 @@ import themejson from "../styles/theme.json";
 import ThemeClasses from "../styles/Theme";
 
 import Layout from '../Components/Layout'
-const theme = createMuiTheme(themejson.light);
 
-export default function WrapperApp({children, session}) {
+const dark = createMuiTheme(themejson.light);
+const light = createMuiTheme(themejson.dark);
+
+export default function WrapperApp({children, session, LDTheme}) {
   return (
     <div className="main-container">
-      <ThemeClasses theme={theme}>
+      <ThemeClasses theme={LDTheme?dark:light}>
         <ProviderUserState session={session}>
           <ProviderAlertState>
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={LDTheme?dark:light}>
               <CssBaseline />
               <Layout>
               {children}

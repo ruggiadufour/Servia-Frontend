@@ -5,16 +5,21 @@ export default function HomeScreen() {
       <div className="screen-container">
         <div className="screen-text">
           <h1>
-            <strong className="text-secondary-1">Servia - ¡Encuentra tu servicio ideal!</strong>
+            <strong className="text-dark-1 servia-font">
+              ¡Encontrá tu servicio ideal en Servia!
+            </strong>
           </h1>
-          <h2 className="text-secondary-2">¿Necesitas a un profesional ya?</h2>
-          <p className="text-secondary-2">
-            Encontralo en Servia, podés ver los perfiles de profesionales de
-            distintas áreas, los trabajos que han realizado y si encontrás al
-            indicado, podés hablarle directamente.
+          <h2 className="text-dark-2 servia-font">
+            ¿Necesitas a un profesional ya?
+          </h2>
+          <p className="text-dark-2 servia-font">
+            Encontralo en Servia, podés ver los perfiles de profesionales, los
+            trabajos que han realizado y si encontrás al indicado, podés
+            hablarle directamente.
           </p>
         </div>
       </div>
+      {/* background-blend-mode: darken;  */}
       <style jsx>{`
         h1 {
           font-size: 45px;
@@ -30,12 +35,20 @@ export default function HomeScreen() {
           text-align: justify;
         }
         .screen-container {
-          background-color: lightgreen;
-          background-image: url("/tester.jpg");
           background-position: center;
           background-size: cover;
-          background-blend-mode: soft-light;
-          background-color: #2c2833;
+        
+          background: linear-gradient(
+            217deg,
+              rgba(0, 255, 0, 0.1),
+              rgba(255, 255, 255, 100)
+            ),linear-gradient(
+            to right,
+              rgba(0, 255, 0, 0.05),
+              rgba(255, 255, 255, 100)
+            ),
+            url("/tester.jpg") no-repeat center/cover;
+
           min-height: 100vh;
           position: relative;
           display: flex;
@@ -43,6 +56,9 @@ export default function HomeScreen() {
         }
         .screen-text {
           padding: 5%;
+        }
+        .servia-title {
+          font-size: 2.5rem;
         }
       `}</style>
     </>

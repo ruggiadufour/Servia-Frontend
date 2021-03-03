@@ -6,7 +6,7 @@ export default function Home({ categories }) {
   const router = useRouter();
 
   function searchProfiles(id, name) {
-    router.push("/publicaciones?category_id=" + id + "&type=true");
+    router.push("/perfiles?category_id=" + id + "&is_profile=true");
   }
 
   return (

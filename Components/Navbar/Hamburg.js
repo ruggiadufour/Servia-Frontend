@@ -49,7 +49,7 @@ export default function Hamburg() {
             onClick={() => {
               plegarMenu();
               router.push(
-                `/solicitudes/mias`//?public_users=${UState.user.public_user.id}&type=false`
+                `/solicitudes/mias` //?public_users=${UState.user.public_user.id}&type=false`
               );
             }}
           >
@@ -58,13 +58,11 @@ export default function Hamburg() {
         </div>
 
         {/*Proveedor*/}
-        <div hidden={UState?.user.type === 1}>
+        <div hidden={UState?.user?.type === 1}>
           <MenuItem
             onClick={() => {
               plegarMenu();
-              router.push(
-                `/publicaciones/crear`
-              );
+              router.push(`/publicaciones/crear`);
             }}
           >
             🛠 Crear publicación
@@ -74,7 +72,7 @@ export default function Hamburg() {
             onClick={() => {
               plegarMenu();
               router.push(
-                `/publicaciones/mias`//?public_users=${UState.user.public_user.id}&type=true`
+                `/publicaciones/mias` //?public_users=${UState.user.public_user.id}&type=true`
               );
             }}
           >
@@ -83,13 +81,20 @@ export default function Hamburg() {
         </div>
 
         {/*Administrador*/}
-        <div hidden={UState?.user.role.id !== 2}>
-          <a href="#">
-            <MenuItem onClick={plegarMenu}>Gestionar reportes</MenuItem>
-          </a>
-          <a href="#">
-            <MenuItem onClick={plegarMenu}>Verificar identidades </MenuItem>
-          </a>
+        <div hidden={UState?.user?.role.id !== 3}>
+          <MenuItem
+            onClick={() => {
+              plegarMenu();
+              router.push(
+                `/admin/gestionar-reportes`
+              );
+            }}
+          >
+            Gestionar reportes
+          </MenuItem>
+
+          <MenuItem onClick={plegarMenu}>Verificar identidades </MenuItem>
+
           {/*<a to={state.ruta+"/administrar-categorias"} className={classes.Estiloa}><MenuItem onClick={plegarMenu}>Administrar categorías </MenuItem></Link>*/}
         </div>
       </Menu>

@@ -1,173 +1,111 @@
-import React, {useEffect, useState, useContext} from 'react'
-import axios from 'axios'
+import React, { useEffect, useState, useContext } from "react";
+import axios from "axios";
 
 //Material UI
-import {LinearProgress, Tooltip, FormGroup, FormControlLabel, Checkbox, Modal, Backdrop, Fade, Typography, TextField, Button, Hidden} from '@material-ui/core/';
-import Reportar from '@material-ui/icons/PriorityHigh';
-import Estilos from '../Estilos.js';
-import AlertaMensaje from '../AlertaMensaje.js';
+import {
+  LinearProgress,
+  Tooltip,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Modal,
+  Backdrop,
+  Fade,
+  Typography,
+  TextField,
+  Button,
+  Hidden,
+} from "@material-ui/core/";
+import Report from "@material-ui/icons/PriorityHigh";
 
-import { ObtenerEstadoAplicacion } from '../../Estados/AplicacionEstado'
+import { useMotives, sendReport } from "../../Api/reports";
+import { UserState } from "../../States/User";
+import { AlertState } from "../../States/Alert";
+import { useRouter } from "next/router";
 
 //Subcomponente utilizado cada vez que se quiere reportar una publicación o un perfil
-export default function ReportarPublicacion({esDePerfil, solicitud, abrirAlerta}) {
-  const classes = Estilos();
-  const { state } = useContext(ObtenerEstadoAplicacion);
-  const [open, setOpen] = useState(false);
-  const [motivos, setmotivos] = useState([{id: null, nombre: "",tipo: false}])
-  const [motivosSeleccionados, setmotivosSeleccionados] = useState([])
-  const [descripcion, setdescripcion] = useState("")
-  const [abrir, setabrir] = useState(false)
-  const [cargando, setcargando] = useState(false)
-  const [mensaje, setmensaje] = useState(false);
+export default function ReportarPublicacion({ type, id }) {
+  //type=true means the report goes to a user profile
+  const { UState } = useContext(UserState);
+  const { ADispatch } = useContext(AlertState);
+  const router = useRouter();
 
-  //Ejecutados cuando se abre o se cierra la ventana modal
+  const [open, setOpen] = useState(false);
+  const [selectedMotives, setSelectedMotives] = useState([]);
+  const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(false);
+
+  const { motives, isError } = useMotives(true);
+
   const handleOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
-    setmotivosSeleccionados([])
+    setSelectedMotives([]);
+    setDescription("")
     setOpen(false);
   };
 
   //Función ejecutada cada vez que se selecciona un motivo
-  function seleccionarMotivo(Motivo){
-    if(mensaje===true)
-      setmensaje(false)
-    let esta = motivosSeleccionados.some((motivo) => motivo.id===Motivo.id)
+  function selectMotive(Motive) {
+    if (message === true) setMessage(false);
+
+    let is = selectedMotives.some((motive) => motive === Motive.id);
     //Si no está, se lo agrega al arreglo, caso contrario se lo quita
-    if(!esta){
-      setmotivosSeleccionados((arreglo)=>[...arreglo, {id:Motivo.id, nombre:Motivo.nombre}])
-    }else{
-      setmotivosSeleccionados(motivosSeleccionados.filter((motivo)=>motivo.id!==Motivo.id))
+    if (!is) {
+      setSelectedMotives((array) => [...array, Motive.id]);
+    } else {
+      setSelectedMotives(
+        selectedMotives.filter((element) => element !== Motive.id)
+      );
     }
   }
 
-  //Traemos los motivos existentes en el sistema
-  useEffect(()=>{
-    if(state.jwt!=="" || state.publico===true){
-      axios.get(state.servidor+"/api/motivos?tipo="+esDePerfil)
-      .then(response => {
-        setmotivos(response.data)
-      })
-      .catch(error => {
-        console.log("Un error ha ocurrido al cargar las motivos.")
-        console.log(error.response)
-      })      
-    }
-  },[state.jwt, state.publico])
+  async function send() {
+    if (selectedMotives.length === 0) {
+      setMessage(true);
+    } else {
+      if (UState) {
+        setLoading(true)
+        await sendReport(
+          id,
+          type,
+          { description, motives: selectedMotives },
+          UState.jwt
+        );
+        setLoading(false)
+        ADispatch({
+          type: "setAlert",
+          payload: {
+            desc: "¡Su reporte se ha enviado satisfactoriamente!",
+            type: "success",
+            open: true,
+          },
+        });
 
-  //Función que se utiliza para ver si hay algún reporte ya hecho a esa publicación o perfil
-  function ComprobarReporte(reporte){
-    let auth = 'Bearer '+state.jwt;
-    //Si hay algún motivo seleccionado...
-    if(motivosSeleccionados.length!==0){
-      //Si existe ya algún reporte creado a la publicación o al perfil...
-      if(reporte.length!==0){
-        let fecha = new Date()
-        let reporte_conjunto = reporte[0]
-        //Concatenamos la descripción del reporte viejo con el del nuevo reporte
-        let _descripcion = descripcion.length!==0?descripcion:"El usuario no ha proporcionado información adicional."
-        let descripcion_="##Nuevo reporte (Motivos:"+
-        motivosSeleccionados.map(motivo=>(" "+motivo.nombre))+") del día "
-        +fecha.getDate()+"/"+(fecha.getMonth()+1)+"/"+fecha.getFullYear()+": "+_descripcion
-        //Modificamos el reporte
-        axios.put(state.servidor+"/api/reportes/"+reporte_conjunto.id,{
-          descripcion: reporte_conjunto.descripcion+descripcion_
-        },
-          {headers: {'Authorization': auth},
-        })
-        .then(response => {
-          setmensaje(false)
-          handleClose()
-          setabrir(true)
-          setcargando(false)
-          setmotivosSeleccionados([])
-          setdescripcion("")
-        })
-        .catch(error => {
-          console.log("Un error ha ocurrido al cargar las motivos.")
-          console.log(error.response)
-        })
-      }else{
-        //Si no existe ya algún reporte creado a la publicación o al perfil, creamos el reporte
-        axios.post(state.servidor+"/api/reportes",{
-          motivos: motivosSeleccionados.map(motivo_=>(motivo_.id)),
-          Solicitud_id: esDePerfil?null:solicitud.id,
-          Usuario_id: esDePerfil?solicitud.id:solicitud.Usuario_id.id,
-          accion: false,
-          estado: 0,
-          descripcion: descripcion
-        },{
-          headers: {'Authorization': auth},
-        })
-        .then(response => {
-          console.log(response.data)
-          setmensaje(false)
-          handleClose()
-          setabrir(true)
-          setcargando(false)
-          setmotivosSeleccionados([])
-          setdescripcion("")
-        })
-        .catch(error => {
-          console.log("Un error ha ocurrido al cargar las motivos.")
-          console.log(error.response)
-        })
+        handleClose()
+      } else {
+        router.push("/sesion");
       }
-    }else{
-      setcargando(false)
-      setmensaje(true)
     }
   }
 
-  //Función que se ejecuta al enviar el reporte
-  function EnviarReporte(){
-    setcargando(true)
-    let auth = 'Bearer '+state.jwt;
-    //Si el reporte es a una publicación, entonces se trae el reporte (si es que existe) que coincida con el id de la publicación y su estado sea "En espera"
-    if(!esDePerfil && solicitud.id!==null){
-      axios.get(state.servidor+"/api/reportes?Solicitud_id="+solicitud.id+"&estado=0"
-        ,{headers: {'Authorization': auth},
-      })
-      .then(response => {
-        ComprobarReporte(response.data)
-      })
-      .catch(error => {
-        console.log("Un error ha ocurrido al cargar las motivos.")
-        console.log(error.response)
-      })
-    }
-    //Si el reporte es a un perfil, entonces se trae el reporte (si es que existe) que coincida con el id del usuario y su estado sea "En espera"
-    if(esDePerfil && solicitud.id!==null){
-      axios.get(state.servidor+"/api/reportes?Usuario_id="+solicitud.id+"&estado=0"
-        ,{headers: {'Authorization': auth},
-      })
-      .then(response => {
-        let reportes_solicitud_null = response.data.filter((reporte) => reporte.Solicitud_id===null)
-        ComprobarReporte(reportes_solicitud_null)
-      })
-      .catch(error => {
-        console.log("Un error ha ocurrido al cargar las motivos.")
-        console.log(error.response)
-      })
-    }
+  if (isError) {
+    return <p>Hubo un error, intente luego.</p>;
   }
-
 
   return (
-    <div>
-      {abrir && <AlertaMensaje mensaje="¡Se ha enviado su reporte correctamente!" abrir={abrir} setabrir={setabrir}/>}
-      <Tooltip title={esDePerfil?"Reportar proveedor de servicios":"Reportar publicación"}>
-        <Button
-            onClick={handleOpen}
-        ><Reportar/>
+    <div className="report">
+      <Tooltip title={"Reportar publicación"} >
+        <Button onClick={handleOpen}>
+          <Report />
         </Button>
       </Tooltip>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        className={classes.mostrarFlex}
         open={open}
         onClose={handleClose}
         closeAfterTransition={true}
@@ -175,58 +113,75 @@ export default function ReportarPublicacion({esDePerfil, solicitud, abrirAlerta}
         BackdropProps={{
           timeout: 500,
         }}
+        className="flex-col"
       >
         <Fade in={open}>
-          <div className={classes.papelFondo}>
-            <Typography variant="h5" component="h2" align="center">
-                Seleccione los motivos:
+          <div className="general-width p-15 background-primary-1">
+            <Typography variant="h4" component="h2" align="center">
+              {`Reportar ${type?"perfil":"publicación"}`}
+            </Typography>
+            <Typography variant="h5" component="h3" align="left">
+              Seleccione los motivos:
             </Typography>
             <FormGroup required>
-            {
-              motivos.map((motivo,i)=>(
+              {motives?.map((motive, i) => (
                 <FormControlLabel
                   key={i}
                   control={
-                  <Checkbox
-                    variant="error"
-                    onChange={()=>{seleccionarMotivo(motivo)}}
-                  />
+                    <Checkbox
+                      variant="error"
+                      onChange={() => {
+                        selectMotive(motive);
+                      }}
+                    />
                   }
-                  label={motivo.nombre}
+                  label={motive.name}
                 />
-              ))
-            }
+              ))}
             </FormGroup>
 
-            <Hidden xlDown={!mensaje || cargando}>
-              <Typography color="error">
-                Debe seleccionar un motivo.
-              </Typography>
+            <Hidden xlDown={!message || loading}>
+              <Typography color="error">Debe seleccionar un motivo.</Typography>
             </Hidden>
 
             <TextField
-            className={classes.inputAncho}
-            onChange={(e)=>{setdescripcion(e.target.value)}}
-            value={descripcion}
-            id="filled-basic"
-            label="Informacion adicional"
-            variant="filled"
-            multiline/>
+              onChange={(e) => {
+                setDescription(e.target.value);
+              }}
+              value={description}
+              id="filled-basic"
+              label="Informacion adicional"
+              variant="filled"
+              className="w-100"
+              multiline
+            />
 
-            <br/>
-            {cargando && <LinearProgress color="secondary"/>}
-            
+            <br />
+            {loading && <LinearProgress color="secondary" />}
+
             <Button
-            disabled={cargando}
-            className={classes.inputAncho}
-            style={{marginTop:10}}
-            size="large"
-            variant="contained"
-            color="primary"
-            onClick={EnviarReporte}>Enviar</Button>
+              disabled={loading}
+              size="large"
+              variant="contained"
+              color="primary"
+              className="w-100"
+              onClick={send}
+            >
+              Enviar
+            </Button>
           </div>
         </Fade>
       </Modal>
+
+      <style jsx>
+        {`
+          .report {
+            position: absolute;
+            bottom:0;
+            right:0;
+          }
+        `}
+      </style>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 //Styles
 import "../styles/globals.css";
 //Framework
+import {useState} from 'react'
 import { parseCookies } from "nookies";
 import Router from "next/router";
 import { getLoggedUser } from '../Api/logged_user'
@@ -10,10 +11,12 @@ import Footer from "../Components/Footer/Footer";
 import WrraperApp from "../Components/Wrapper_app";
 
 function MyApp({ Component, pageProps, session }) {
+  const [LDTheme, setLDTheme] = useState(false)
+
   return (
     <>
-      <WrraperApp session={session}>
-        <Nav />
+      <WrraperApp session={session} LDTheme={LDTheme}>
+        <Nav setLDTheme={setLDTheme}/>
         <div className="content">
           <Component {...pageProps} />
         </div>

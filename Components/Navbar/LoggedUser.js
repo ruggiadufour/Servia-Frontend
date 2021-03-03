@@ -28,7 +28,7 @@ export default function LoggedUser() {
       : "/Icono1.png";
 
     setProfileImage(img);
-  }, [UState]);
+  }, []);
 
   const [despPerf, setdespPerf] = useState(null);
   const [despNoti, setdespNoti] = useState(null);
@@ -69,11 +69,10 @@ export default function LoggedUser() {
         color="inherit"
         onClick={openProfileContext}
         style={{ position: "relative" }}
-        className="background-secondary-2"
       >
         {/* <AccountCircle /> */}
 
-        <img className="background-secondary-2" src={profileImage} alt="Icono profile logo" />
+        <img className="background-secondary-1" src={profileImage} alt="Icono profile logo" />
 
         <p className="icon-profile">🔨</p>
       </IconButton>

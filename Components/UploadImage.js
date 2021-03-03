@@ -1,12 +1,9 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
-import axios from "axios";
 
-import {UserState} from '../States/User'
 //Componente utilizado para la carga de imágenes en el sitio
 const SingleFileAutoSubmit = ({ setFiles, Files, preloadImages, amount, setToDelete, disabled = false }) => {
-  const {UState} = useContext(UserState)
 
   const API = process.env.NEXT_PUBLIC_API;
   const [initialFiles, setInitialFiles] = useState([]);
@@ -30,14 +27,13 @@ const SingleFileAutoSubmit = ({ setFiles, Files, preloadImages, amount, setToDel
   }
 
   useEffect(async () => {
-    console.log(preloadImages)
     let files = await Promise.all(
       preloadImages.map(async (image) => {
         return await convertToFile(image);
       })
     );
     setInitialFiles(files);
-  }, [preloadImages]);
+  }, []);
 
   //Se ejecuta cada vez que cambia el estado del componente
   const handleChangeStatus = ({ meta, file }, status) => {
