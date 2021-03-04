@@ -70,6 +70,11 @@
   border: none;
   padding: 10px;
   flex: 1;
+  background-color: #0002;
+  
+}
+.input_search::placeholder {
+  color: black;
 }
 .login_buttons {
   margin-left: auto;

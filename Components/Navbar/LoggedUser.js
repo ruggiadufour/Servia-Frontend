@@ -7,7 +7,6 @@ import {
   MenuItem,
   Typography,
 } from "@material-ui/core";
-import { Chat, Notifications as NotificationsIcon } from "@material-ui/icons";
 
 import { UserState } from "../../States/User";
 import { destroyCookie } from "nookies";
@@ -18,15 +17,23 @@ export default function LoggedUser() {
   const router = useRouter();
   const API = process.env.NEXT_PUBLIC_API;
 
-
-  const [noRead, setNoRead] = useState(NState.filter(notif => notif.read===false).length)
+  const [noRead, setNoRead] = useState(
+    NState.filter((notif) => notif.read === false)
+  );
   const [profileImage, setProfileImage] = useState("/Icono1.png");
+
+  //Setting the no read notifications
+  useEffect(() => {
+    const noRead_ = NState.filter((notif) => notif.read === false);
+    setNoRead(noRead_);
+  }, [NState]);
+
+  //Setting profile image
   useEffect(() => {
     const isImage = UState.user.public_user.profile?.formats?.thumbnail?.url;
     let img = isImage
       ? API + UState.user.public_user.profile.formats.thumbnail.url
       : "/Icono1.png";
-
     setProfileImage(img);
   }, []);
 
@@ -48,7 +55,7 @@ export default function LoggedUser() {
   };
 
   async function logOut() {
-    await destroyCookie(null, "session");
+    destroyCookie(null, "session");
     UDispatch({ type: "cleanUser" });
     setdespPerf(null);
     router.push("/");
@@ -98,7 +105,7 @@ export default function LoggedUser() {
         <div>
           <MenuItem
             onClick={() => {
-              goTo("/perfiles?id=" + UState?.user.public_user.id);
+              goTo("/perfil/mi-perfil");
             }}
           >
             <Typography variant="inherit">
@@ -124,7 +131,7 @@ export default function LoggedUser() {
 
       {/*Desplegar notificaciones*/}
       <IconButton color="inherit" onClick={openNotifContext}>
-        <Badge badgeContent={noRead} color="secondary">
+        <Badge badgeContent={noRead.length} color="secondary">
           {/* <NotificationsIcon /> */}
           🔔
         </Badge>
@@ -136,12 +143,18 @@ export default function LoggedUser() {
         onClose={closeNotifContext}
       >
         <div className="p-15">
-          <Typography component="h3" variant="h6">
-            🔔 Últimas notificaciones
-          </Typography>
-          {NState?.map((notif, i) => (
+          {noRead.length === 0 ? (
+            <Typography component="h3" variant="h6">
+              No tenés nuevas notificaciones 🤷‍♂️
+            </Typography>
+          ) : (
+            <Typography component="h3" variant="h6">
+              🔔 Últimas notificaciones
+            </Typography>
+          )}
+          {noRead.map((notif, i) => (
             <div className="notification" key={i}>
-            <ReactMarkdown  source={notif.description} />
+              <ReactMarkdown source={notif.description} />
             </div>
           ))}
           <MenuItem
@@ -158,15 +171,12 @@ export default function LoggedUser() {
       </Menu>
 
       {/*Componente chats*/}
-      <a href="#">
-        <IconButton color="inherit">
-          <Badge badgeContent={0} color="secondary">
-            {/* <Chat /> */}
-            📩
-          </Badge>
-        </IconButton>
-      </a>
-
+      <IconButton color="inherit">
+        <Badge badgeContent={1} color="secondary">
+          {/* <Chat /> */}
+          📩
+        </Badge>
+      </IconButton>
       <style jsx>
         {`
           .logged {

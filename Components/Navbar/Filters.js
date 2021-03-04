@@ -11,11 +11,9 @@ import {
   Grid,
 } from "@material-ui/core/";
 //API-Client
-import { getCategories } from "../../Api/categories";
 import { getCities, getProvinces } from "../../Api/locations";
 
-export default function Filters({ open, setOpen, applyFilters }) {
-  const [categories, setCategories] = useState([]);
+export default function Filters({ open, setOpen, applyFilters, categories }) {
   const [selectedCat, setSelectedCat] = useState(null);
   const [filters, setFilters] = useState({
     is_profile: true,
@@ -36,25 +34,28 @@ export default function Filters({ open, setOpen, applyFilters }) {
   //First render callback
   useEffect(async () => {
     //Setting categories
-    let res = await getCategories();
-    if (res.length !== 0) {
-      setSelectedCat(res[0]);
+    if (categories.length !== 0) {
+      setSelectedCat(categories[0]);
       setFilters({
         ...filters,
-        category: res[0].name,
-        category_id: res[0].id,
+        category: categories[0].name,
+        category_id: categories[0].id,
         ...location,
       });
+
+      //Setting initial filters to see them in nav
+      applyFilters({
+        ...location,
+        is_profile: true,
+        category_id: categories[0].id,
+        category: categories[0].name,
+      });
+
+      //Setting location
+      setProvinces(await getProvinces());
+      setCities(await getCities("Chaco"));
     }
-    setCategories(res);
-
-    //Setting initial filters to see them in nav
-    applyFilters({...location, is_profile: true, category_id: res[0].id, category: res[0].name}); 
-
-    //Setting location
-    setProvinces(await getProvinces());
-    setCities(await getCities("Chaco"));
-  }, []);
+  }, [categories]);
 
   //On select a province it has to update the city select
   async function selectProvince(e) {
@@ -117,7 +118,7 @@ export default function Filters({ open, setOpen, applyFilters }) {
           />
         </ListItem>
 
-        {!filters.is_profile && ( 
+        {!filters.is_profile && (
           <>
             <ListItem>
               <FormControlLabel
@@ -136,22 +137,23 @@ export default function Filters({ open, setOpen, applyFilters }) {
                 label="Filtrar por publicaciones de solicitudes de servicios de usuarios (estas publicaciones son creadas por personas que están buscando un servicio en especial)."
               />
             </ListItem>
+
+            <ListItem>
+              <select
+                name="select"
+                className="w-100 select"
+                onChange={selectCategory}
+                value={selectedCat ? selectedCat : ""}
+              >
+                {categories.map((category, i) => (
+                  <option key={i} value={JSON.stringify(category)}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </ListItem>
           </>
         )}
-        <ListItem>
-          <select
-            name="select"
-            className="w-100 select"
-            onChange={selectCategory}
-            value={selectedCat ? selectedCat : ""}
-          >
-            {categories.map((category, i) => (
-              <option key={i} value={JSON.stringify(category)}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </ListItem>
 
         <h3 className="m-15">Locación</h3>
         <ListItem>

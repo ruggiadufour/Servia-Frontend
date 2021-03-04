@@ -12,6 +12,7 @@ import {
   IconButton,
   useControlled,
 } from "@material-ui/core/";
+import Alert from "@material-ui/lab/Alert";
 import Edit from "@material-ui/icons/Edit";
 import Paused from "@material-ui/icons/Pause";
 import Unpaused from "@material-ui/icons/PlayArrow";
@@ -157,10 +158,23 @@ export default function RowPublication({ publication, removeOne }) {
 
         {openDialog && (
           <AlertDialog
-            title={`¿Realmente quiere eliminar ${publication.title}?`}
+            title={`¿Realmente quiere eliminar ${thisPublicaction.title}?`}
             message="La publicación se eliminará permanentemente."
             callback={deleteThis}
           />
+        )}
+      </div>
+
+      <div className="w-100">
+        {thisPublicaction.paused && (
+          <Alert variant="outlined" severity="info">
+            Esta publicación está pausada
+          </Alert>
+        )}
+        {thisPublicaction.blocked && (
+          <Alert variant="outlined" severity="error">
+            Esta publicación está bloqueada
+          </Alert>
         )}
       </div>
 
@@ -181,11 +195,14 @@ export default function RowPublication({ publication, removeOne }) {
             padding: 10px;
             text-align: center;
             min-width: 280px;
+
             position: relative;
           }
           .card-row {
             max-width: 500px;
+            height: 100%;
             display: flex;
+            
             flex-wrap: wrap;
           }
           .manage-publication {

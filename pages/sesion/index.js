@@ -18,7 +18,7 @@ import { UserState } from "../../States/User";
 import Link from "next/link";
 
 export default function IniciarSesion({ mensaje }) {
-  const { UDispatch } = useContext(UserState);
+  const { UDispatch, NDispatch } = useContext(UserState);
   const API = process.env.NEXT_PUBLIC_API;
   const router = useRouter();
 
@@ -54,17 +54,29 @@ export default function IniciarSesion({ mensaje }) {
           },
         }
       )
-      .then((response) => {
+      .then(async (response) => {
         console.log("Well done!");
+
+        const user_ = {...response.data.user};
+        delete user_.notifications;
+
         setCookie(
           null,
           "session",
-          JSON.stringify({ user: response.data.user, jwt: response.data.jwt }),
+          JSON.stringify({
+            user: user_,
+            jwt: response.data.jwt,
+          }),
           {
             maxAge: 30 * 24 * 60 * 60,
             path: "/",
           }
         );
+
+        NDispatch({
+          type: "setNotifications",
+          payload: response.data.user.notifications.reverse(),
+        });
 
         UDispatch({
           type: "setUser",

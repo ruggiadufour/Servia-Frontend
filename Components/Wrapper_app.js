@@ -11,8 +11,8 @@ import ThemeClasses from "../styles/Theme";
 
 import Layout from '../Components/Layout'
 
-const dark = createMuiTheme(themejson.light);
-const light = createMuiTheme(themejson.dark);
+const dark = createMuiTheme(themejson.dark);
+const light = createMuiTheme(themejson.light);
 
 export default function WrapperApp({children, session, LDTheme}) {
   return (

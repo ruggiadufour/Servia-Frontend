@@ -8,11 +8,12 @@ import {
   Tooltip,
   IconButton,
 } from "@material-ui/core/";
+import Alert from "@material-ui/lab/Alert";
 import Verificado from "@material-ui/icons/CheckCircleOutline";
 
 //Componentes
 import Estrellas from "../Estrellas.js";
-import Report from '../Publication/Report'
+import Report from "../Publication/Report";
 
 export default function RowProfile({ profile }) {
   function getImage() {
@@ -21,6 +22,11 @@ export default function RowProfile({ profile }) {
       : "/IconoV2.png";
     return image;
   }
+
+  if (!profile) {
+    return <h1>Cargando</h1>;
+  }
+
   return (
     <div className="card-row background-2">
       <div className="card-img">
@@ -39,7 +45,7 @@ export default function RowProfile({ profile }) {
           </Hidden>
         </Typography>
 
-        <Report id={profile.id} type={true}/>
+        <Report id={profile.id} type={true} />
 
         {profile.show_phone && profile.phone.length !== 0 && (
           <Typography align="left" component="h5" variant="h5">
@@ -64,10 +70,23 @@ export default function RowProfile({ profile }) {
         </Typography>
 
         {profile.categories.map((cat, i) => (
-          <Chip variant="outlined" label={"✔ "+cat.name} key={i} />
+          <Chip variant="outlined" label={"✔ " + cat.name} key={i} />
         ))}
 
         <Estrellas valor={4} clickeable={false} cambiarValor={() => {}} />
+      </div>
+
+      <div className="w-100">
+        {profile.state && (
+          <Alert variant="outlined" severity="info">
+            Sus servicios están pausados, para cambiar esto seleccione la opcion "👨‍🔧 Modificar mi perfil" y por ultimo seleccionar "👷‍♂️ Soy proveedor de servicios" y guardar.
+          </Alert>
+        )}
+        {profile.blocked && (
+          <Alert variant="outlined" severity="error">
+            Su perfil se encuentra bloqueado debido a que incumple alguna regla. Por favor, modifíquelo así un administrador lo desbloquea.
+          </Alert>
+        )}
       </div>
 
       <style jsx>

@@ -16,10 +16,28 @@ import { AlertState } from "../../States/Alert";
 
 import styles from "../../styles/Navbar.module.css";
 
+import { getCategories } from "../../Api/categories";
+
 export default function Navbar({ setLDTheme }) {
   const router = useRouter();
   const { UState, NDispatch, socket } = useContext(UserState);
   const { ADispatch } = useContext(AlertState);
+
+  const [categories, setCategories] = useState([]);
+  const [selectedCat, setSelectedCat] = useState(null);
+
+  //Setting categories
+  useEffect(async () => {
+    let res = await getCategories();
+    setCategories(res);
+  }, []);
+
+  //On select a category, set filters
+  function selectCategory(e) {
+    const cat_ = JSON.parse(e.target.value)
+    setSelectedCat(e.target.value);
+    setFilters({...filters, category_id: cat_.id, category: cat_.name})
+  }
 
   //Notifications handler
   useEffect(() => {
@@ -106,12 +124,14 @@ export default function Navbar({ setLDTheme }) {
               <select
                 name="select"
                 className={`${styles.input_search} select`}
-                onChange={() => {}}
-                value="Hola"
+                onChange={selectCategory}
+                value={selectedCat ? selectedCat : ""}
               >
-                <option value="Hola">
-                  Hola
-                </option>
+                {categories.map((category, i) => (
+                  <option key={i} value={JSON.stringify(category)}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
             ) : (
               <input
@@ -180,6 +200,7 @@ export default function Navbar({ setLDTheme }) {
             open={openFilters}
             setOpen={setOpenFilters}
             applyFilters={setFiltersCall}
+            categories={categories}
           />
         </div>
 

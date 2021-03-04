@@ -26,7 +26,7 @@ const notificationsReducer = (state, action) => {
     case "setNotifications":
       return action.payload;
     case "pushNotification":
-      return [...state, action.payload];
+      return [ action.payload, ...state];
     default:
       return { ...state };
   }
@@ -36,7 +36,7 @@ const UserState = createContext(initState);
 
 function ProviderUserState({ children, session }) {
   const [UState, UDispatch] = useReducer(userReducer, session);
-  const [NState, NDispatch] = useReducer(notificationsReducer, session?session.user.notifications:null);
+  const [NState, NDispatch] = useReducer(notificationsReducer, session?session.user.notifications.reverse():null);
 
   const [socket, setSocket] = useState(null)
 

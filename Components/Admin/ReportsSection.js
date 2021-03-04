@@ -155,9 +155,6 @@ function DeployData({ report, updateReport }) {
    * state: 2 ->Rejected report
    * state: 3 ->Concluided report
    */
-  useEffect(()=>{
-    
-  },[])
 
   function updateR(desc, isAccepted) {
     //updateReport(id, isAccepted, action, desc, UState.jwt)

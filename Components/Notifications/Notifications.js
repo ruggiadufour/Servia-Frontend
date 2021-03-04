@@ -26,12 +26,32 @@ import Alerta from "@material-ui/lab/Alert";
 //import RealizarOpinion from './RealizarOpinion.js'
 import ReactMarkdown from "react-markdown";
 import { UserState } from "../../States/User";
+
+import {setRead} from '../../Api/notifications'
+
 export default function VerificarIdentidad() {
-  const { NState} = useContext(UserState);
+  const { NState, UState, NDispatch} = useContext(UserState);
 
   //Variables del componente
-  const [notifications, setNotifications] = useState(NState);
+  const [notifications, setNotifications] = useState(NState?NState:[]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(async ()=>{
+    //Setting all notifications in read
+    const some = notifications.some(notif => notif.read === false)
+    if(some){
+      const {data} = await setRead(UState.jwt)
+      if(data){
+        console.log(data)
+
+        NDispatch({
+          type: "setNotifications",
+          payload: data.reverse(),
+        });
+      }
+    }
+    
+  },[])
 
   //La siguiente función es de una librería que permite ver fechas en términos mas amigables (ej. hace 1 hora, hace 5 dias, etc.)
   // const localeFunc = (number, index, totalSec) => {
@@ -86,7 +106,7 @@ export default function VerificarIdentidad() {
         //El siguiente mapeo muestra todas las notificaciones que el usuario tiene, como pueden haber
         //distintos tipos de notificaciones, se consideran diferentes casos para mostrarlas
         notifications.map((notif, i) => (
-          <Paper key={i} className="w-100 p-15 ">
+          <Paper key={i} className="w-100 p-15">
             <ReactMarkdown  source={notif.description} />
           </Paper>
         ))
