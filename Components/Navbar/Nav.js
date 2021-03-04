@@ -10,17 +10,34 @@ import Filters from "./Filters";
 import LoggedUser from "./LoggedUser";
 import Hamburg from "./Hamburg";
 import ThemeSelector from "./ThemeSelector";
+
 import { UserState } from "../../States/User";
+import { AlertState } from "../../States/Alert";
 
 import styles from "../../styles/Navbar.module.css";
 
 export default function Navbar({ setLDTheme }) {
   const router = useRouter();
-  const { UState } = useContext(UserState);
+  const { UState, NDispatch, socket } = useContext(UserState);
+  const { ADispatch } = useContext(AlertState);
 
+  //Notifications handler
   useEffect(() => {
-    console.log(UState);
-  }, [UState]);
+    if (socket) {
+      socket.on("push_notification", (data) => {
+        const parsed_notif = JSON.parse(data);
+        NDispatch({ type: "pushNotification", payload: parsed_notif });
+        ADispatch({
+          type: "setAlert",
+          payload: {
+            desc: "¡Tenés una nueva notificación!",
+            type: "info",
+            open: true,
+          },
+        });
+      });
+    }
+  }, [socket]);
 
   //State variables
   const [openFilters, setOpenFilters] = useState(false);
@@ -66,7 +83,6 @@ export default function Navbar({ setLDTheme }) {
   }
 
   function setFiltersCall(filters_) {
-    console.log(filters_);
     setFilters(filters_);
   }
 
@@ -86,15 +102,29 @@ export default function Navbar({ setLDTheme }) {
         <div className={`${styles.filters} flex-col`}>
           {/* Input and buttons */}
           <div className={`${styles.filters__input}`}>
-            <input
-              type="text"
-              className={styles.input_search}
-              placeholder="¡Buscá un servicio!"
-              value={word}
-              onChange={(e) => {
-                setWord(e.target.value);
-              }}
-            />
+            {filters?.is_profile ? (
+              <select
+                name="select"
+                className={`${styles.input_search} select`}
+                onChange={() => {}}
+                value="Hola"
+              >
+                <option value="Hola">
+                  Hola
+                </option>
+              </select>
+            ) : (
+              <input
+                type="text"
+                className={styles.input_search}
+                placeholder="¡Buscá un servicio!"
+                value={word}
+                onChange={(e) => {
+                  setWord(e.target.value);
+                }}
+              />
+            )}
+
             <button
               className="button-center"
               onClick={() => {

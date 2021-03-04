@@ -15,11 +15,8 @@ import { ObtenerEstadoAplicacion } from '../../Estados/AplicacionEstado'
 //Este componente permite mostrar información breve de las últimas reseñas que el usuario tiene, este componente
 //es accedido por medio del ícono de campana en la barra de navegación
 export default function NotificacionesNav({plegarNoti, notificaciones}) {
-    const classes = Estilos();
-    const { state, dispatch } = useContext(ObtenerEstadoAplicacion);
-
     return (
-        <div style={{padding:"0px 15px 0px 15px"}}>
+        <div>
             <Typography align="center" component="h5" variant="h5">Notificaciones</Typography>
             {/*Si el usuario no tiene notificaciones, se le informa.*/}
             {notificaciones.length===0 && <Typography>No tienes nuevas notificaciones</Typography>}

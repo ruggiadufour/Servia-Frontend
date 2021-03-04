@@ -3,7 +3,7 @@ import io from "socket.io-client";
 
 const initState = null;
 
-const reducer = (state, action) => {
+const userReducer = (state, action) => {
   switch (action.type) {
     case "setUser":
       return { ...state, ...action.payload };
@@ -21,19 +21,39 @@ const reducer = (state, action) => {
       return { ...state };
   }
 };
+const notificationsReducer = (state, action) => {
+  switch (action.type) {
+    case "setNotifications":
+      return action.payload;
+    case "pushNotification":
+      return [...state, action.payload];
+    default:
+      return { ...state };
+  }
+};
 
 const UserState = createContext(initState);
 
 function ProviderUserState({ children, session }) {
-  const [state, dispatch] = useReducer(reducer, session);
+  const [UState, UDispatch] = useReducer(userReducer, session);
+  const [NState, NDispatch] = useReducer(notificationsReducer, session?session.user.notifications:null);
+
   const [socket, setSocket] = useState(null)
 
   useEffect(()=>{
-    setSocket(io.connect(process.env.NEXT_PUBLIC_API))
-  },[])
+    //If this false means the user is not logged
+    if(socket===null && UState){
+      //Initialize the socket connection
+      const socket_aux = io.connect(process.env.NEXT_PUBLIC_API)
+      socket_aux.emit("setUser",JSON.stringify({id: UState.user.id, role: UState.user.role.id}))
+      
+      //store the socket object
+      setSocket(socket_aux)
+    }
+  },[UState])
 
   return (
-    <UserState.Provider value={{ UState: state, UDispatch: dispatch, socket:socket }}>
+    <UserState.Provider value={{ UState: UState, UDispatch: UDispatch, NState: NState, NDispatch: NDispatch, socket:socket }}>
       {children}
     </UserState.Provider>
   );

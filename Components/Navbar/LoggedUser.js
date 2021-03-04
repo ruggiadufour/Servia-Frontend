@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import {
   IconButton,
   Badge,
@@ -6,20 +7,19 @@ import {
   MenuItem,
   Typography,
 } from "@material-ui/core";
-import {
-  Chat,
-  Notifications as NotificationsIcon,
-} from "@material-ui/icons";
+import { Chat, Notifications as NotificationsIcon } from "@material-ui/icons";
 
 import { UserState } from "../../States/User";
 import { destroyCookie } from "nookies";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 export default function LoggedUser() {
-  const { UState, UDispatch } = useContext(UserState);
+  const { UState, NState, UDispatch } = useContext(UserState);
   const router = useRouter();
   const API = process.env.NEXT_PUBLIC_API;
-  
+
+
+  const [noRead, setNoRead] = useState(NState.filter(notif => notif.read===false).length)
   const [profileImage, setProfileImage] = useState("/Icono1.png");
   useEffect(() => {
     const isImage = UState.user.public_user.profile?.formats?.thumbnail?.url;
@@ -72,7 +72,11 @@ export default function LoggedUser() {
       >
         {/* <AccountCircle /> */}
 
-        <img className="background-secondary-1" src={profileImage} alt="Icono profile logo" />
+        <img
+          className="background-secondary-1"
+          src={profileImage}
+          alt="Icono profile logo"
+        />
 
         <p className="icon-profile">🔨</p>
       </IconButton>
@@ -104,10 +108,12 @@ export default function LoggedUser() {
         </div>
 
         <div>
-          <MenuItem onClick={() => {
+          <MenuItem
+            onClick={() => {
               goTo("/perfil/verificar-identidad");
-            }}>
-              <Typography variant="inherit">🕵️‍♂️ Verificar mi identidad</Typography>
+            }}
+          >
+            <Typography variant="inherit">🕵️‍♂️ Verificar mi identidad</Typography>
           </MenuItem>
         </div>
 
@@ -118,25 +124,45 @@ export default function LoggedUser() {
 
       {/*Desplegar notificaciones*/}
       <IconButton color="inherit" onClick={openNotifContext}>
-        <Badge badgeContent={1} color="secondary">
-          <NotificationsIcon />
+        <Badge badgeContent={noRead} color="secondary">
+          {/* <NotificationsIcon /> */}
+          🔔
         </Badge>
       </IconButton>
       <Menu
         id="simple-menu"
         anchorEl={despNoti}
-        keepMounted
         open={Boolean(despNoti)}
         onClose={closeNotifContext}
       >
-        Notification component
+        <div className="p-15">
+          <Typography component="h3" variant="h6">
+            🔔 Últimas notificaciones
+          </Typography>
+          {NState?.map((notif, i) => (
+            <div className="notification" key={i}>
+            <ReactMarkdown  source={notif.description} />
+            </div>
+          ))}
+          <MenuItem
+            onClick={() => {
+              closeNotifContext();
+              router.push("/notificaciones");
+            }}
+          >
+            <Typography variant="inherit" color="secondary" align="center">
+              Ver mis todas mis notificaicones
+            </Typography>
+          </MenuItem>
+        </div>
       </Menu>
 
       {/*Componente chats*/}
       <a href="#">
         <IconButton color="inherit">
           <Badge badgeContent={0} color="secondary">
-            <Chat />
+            {/* <Chat /> */}
+            📩
           </Badge>
         </IconButton>
       </a>

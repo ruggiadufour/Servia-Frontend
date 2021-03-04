@@ -81,6 +81,7 @@ export default function Change() {
 
   function getFormData(user) {
     const formData = new FormData();
+    console.log(profile)
     if (profile.length!==0) formData.append("files.profile", profile[0]);
     formData.append(
       "data",

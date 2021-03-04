@@ -90,12 +90,10 @@ export default function Hamburg() {
               );
             }}
           >
-            Gestionar reportes
+            📈 Gestionar reportes
           </MenuItem>
 
-          <MenuItem onClick={plegarMenu}>Verificar identidades </MenuItem>
-
-          {/*<a to={state.ruta+"/administrar-categorias"} className={classes.Estiloa}><MenuItem onClick={plegarMenu}>Administrar categorías </MenuItem></Link>*/}
+          <MenuItem onClick={plegarMenu}>👩‍✈️ Verificar identidades </MenuItem>
         </div>
       </Menu>
     </div>

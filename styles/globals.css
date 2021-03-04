@@ -6,7 +6,6 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  
 }
 html,
 body {
@@ -15,12 +14,12 @@ body {
   overflow-x: hidden;
 }
 a {
-  color: inherit; 
+  color: inherit;
   text-decoration: none;
 }
 
-.servia-font{
-  font-family: 'Metamorphous', cursive;
+.servia-font {
+  font-family: "Metamorphous", cursive;
 }
 
 .main-container {
@@ -45,7 +44,7 @@ a {
 .general-width {
   max-width: 1200px;
 }
-.medium-width{
+.medium-width {
   max-width: 600px;
 }
 
@@ -69,13 +68,13 @@ a {
 .w-50 {
   width: 50%;
 }
-.p-15{
+.p-15 {
   padding: 15px;
 }
-.m-15{
+.m-15 {
   margin: 15px;
 }
-.m-5{
+.m-5 {
   margin: 5px;
 }
 
@@ -89,21 +88,27 @@ a {
 }
 
 /* Butttons */
-.button-left:focus, .button-right:focus, .button-center:focus {
+.button-left:focus,
+.button-right:focus,
+.button-center:focus {
   outline: none;
-  background-color: lightgray;
+  background-color: #0004;
 }
-.button-left, .button-right, .button-center {
+.button-left,
+.button-right,
+.button-center {
   height: 45px;
   border: none;
   padding: 10px;
   margin: 5px 0;
 }
-.button-left:hover, .button-right:hover, .button-center:hover {
+.button-left:hover,
+.button-right:hover,
+.button-center:hover {
   cursor: pointer;
-  background-color: #fff3
+  background-color: #fff3;
 }
-.button-left{
+.button-left {
   border-radius: 5px 0 0 5px;
 }
 .button-right {
@@ -113,23 +118,23 @@ a {
 .circle-image {
   border: solid thin gray;
   border-radius: 50%;
-  height:150px!important;
-  width:150px!important;
+  height: 150px !important;
+  width: 150px !important;
   margin: auto;
   object-fit: cover;
 }
 
-.rounded-span{
+.rounded-span {
   border-radius: 30px;
   padding: 8px;
   margin: 10px;
 }
 
 /* nprogres */
-#nprogress .bar{
-  background-color: red!important;
+#nprogress .bar {
+  background-color: red !important;
 }
-#nprogress .spinner-icon{
-  border-top-color: red!important;
-  border-left-color: red!important;
+#nprogress .spinner-icon {
+  border-top-color: red !important;
+  border-left-color: red !important;
 }

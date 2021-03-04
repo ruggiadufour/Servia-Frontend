@@ -34,7 +34,6 @@ export default function ReportSection({
   type,
   reports,
   updateReport,
-  loading,
 }) {
   const [title, setTitle] = useState("");
 
@@ -54,7 +53,7 @@ export default function ReportSection({
       </Grid>
       <Grid item xs={12}>
         <br />
-        {!loading && reports.length === 0 && (
+        {reports.length === 0 && (
           <Alerta variant="outlined" severity="info">
             No hay reportes para mostrar.
           </Alerta>
@@ -144,7 +143,6 @@ function DeployData({ report, updateReport }) {
   //States
   const [open, setOpen] = useState(false);
   const [action, setAction] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const handleClick = () => {
     setOpen(!open);
@@ -164,9 +162,10 @@ function DeployData({ report, updateReport }) {
   function updateR(desc, isAccepted) {
     //updateReport(id, isAccepted, action, desc, UState.jwt)
     const type = report.publication===null?true:false;
+    const title = report.publication!==null?report.publication.title:"";
     const idP_P = report.publication===null?report.public_user.id:report.publication.id;
 
-    socket.emit("reports", JSON.stringify({id:report.id, idP_P, type, isAccepted, action, desc, jwt: UState.jwt}));
+    socket.emit("reports", JSON.stringify({id:report.id, idP_P, title, type, isAccepted, action, desc, jwt: UState.jwt}));
   } 
 
   return (
@@ -236,7 +235,6 @@ function DeployData({ report, updateReport }) {
                 : "No se bloqueó el perfil"}
             </Typography>
           )}
-          {loading && <LinearProgress />}
 
           <div hidden={report.state > 0}>
             {/* {publication.state === -1 && (
@@ -246,7 +244,6 @@ function DeployData({ report, updateReport }) {
             <NewReports
               updateR={updateR}
               report={report}
-              loading={loading}
               isResponse={report.state === -1}
             />
           </div>
@@ -261,7 +258,7 @@ function DeployData({ report, updateReport }) {
 }
 
 //Componente que se utiliza para mostrar los reportes de la sección "Gestionar nuevos reportes"
-const NewReports = ({ updateR, report, loading, isResponse }) => {
+const NewReports = ({ updateR, report, isResponse }) => {
   const [description, setDescription] = useState("");
   return (
     <div>
@@ -282,7 +279,6 @@ const NewReports = ({ updateR, report, loading, isResponse }) => {
 
       <div align="center">
         <Button
-          disabled={loading}
           startIcon={<Aceptar />}
           onClick={() => {
             updateR(description, true);
@@ -292,7 +288,6 @@ const NewReports = ({ updateR, report, loading, isResponse }) => {
         </Button>
         {report.state !== -1 && (
           <Button
-            disabled={loading}
             color="secondary"
             startIcon={<Rechazar />}
             onClick={() => {

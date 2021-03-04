@@ -211,6 +211,7 @@ export default function RegisterModify({
               className="w-100 select"
               onChange={selectProvince}
               value={user.province}
+              required={true}
             >
               {provinces.map((province, i) => (
                 <option key={i} value={province.nombre}>
@@ -230,6 +231,7 @@ export default function RegisterModify({
                 });
               }}
               value={user.city}
+              required={true}
             >
               {cities.map((city, i) => (
                 <option key={i} value={city.nombre}>
