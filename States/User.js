@@ -41,12 +41,18 @@ function ProviderUserState({ children, session }) {
   const [socket, setSocket] = useState(null)
 
   useEffect(()=>{
+    console.log(UState)
     //If this false means the user is not logged
     if(socket===null && UState){
       //Initialize the socket connection
       const socket_aux = io.connect(process.env.NEXT_PUBLIC_API)
       socket_aux.emit("setUser",JSON.stringify({id: UState.user.id, role: UState.user.role.id}))
       
+      socket_aux.on("updateUserData",(data)=>{
+        console.log(data)
+        UDispatch({type:"setUser",payload:{user:JSON.parse(data)}})
+      })
+
       //store the socket object
       setSocket(socket_aux)
     }

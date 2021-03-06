@@ -85,15 +85,20 @@ export default function Hamburg() {
           <MenuItem
             onClick={() => {
               plegarMenu();
-              router.push(
-                `/admin/gestionar-reportes`
-              );
+              router.push(`/admin/gestionar-reportes`);
             }}
           >
             📈 Gestionar reportes
           </MenuItem>
 
-          <MenuItem onClick={plegarMenu}>👩‍✈️ Verificar identidades </MenuItem>
+          <MenuItem
+            onClick={() => {
+              plegarMenu();
+              router.push(`/admin/verificar-identidades`);
+            }}
+          >
+            👩‍✈️ Verificar identidades
+          </MenuItem>
         </div>
       </Menu>
     </div>

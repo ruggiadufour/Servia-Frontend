@@ -10,7 +10,7 @@ export default function MyProfile() {
 
   useEffect(async () => {
     const data = await getUser(UState.user.public_user.id)
-    console.log(data)
+    console.log(UState)
     setProfile(data)
   }, [])
 

@@ -36,7 +36,7 @@ export default function RowProfile({ profile }) {
       <div className="card-info">
         <Typography align="left" component="h5" variant="h5">
           {`‍${profile.name} ${profile.surname}`}
-          <Hidden xlDown={true}>
+          <Hidden xlDown={!profile.verified}>
             <Tooltip title="Usuario verificado">
               <IconButton style={{ padding: 1 }}>
                 <Verificado color="inherit" />
@@ -79,7 +79,7 @@ export default function RowProfile({ profile }) {
       <div className="w-100">
         {profile.state && (
           <Alert variant="outlined" severity="info">
-            Sus servicios están pausados, para cambiar esto seleccione la opcion "👨‍🔧 Modificar mi perfil" y por ultimo seleccionar "👷‍♂️ Soy proveedor de servicios" y guardar.
+            Sus servicios están pausados. Para cambiar esto seleccione la opcion "👨‍🔧 Modificar mi perfil" y por ultimo seleccionar "👷‍♂️ Soy proveedor de servicios" y guardar.
           </Alert>
         )}
         {profile.blocked && (
