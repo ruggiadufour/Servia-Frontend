@@ -11,6 +11,7 @@ import {
 import { UserState } from "../../States/User";
 import { destroyCookie } from "nookies";
 import { useRouter } from "next/router";
+import { getTypeIcon } from "../../Api/notifications";
 
 export default function LoggedUser() {
   const { UState, NState, UDispatch } = useContext(UserState);
@@ -153,8 +154,13 @@ export default function LoggedUser() {
             </Typography>
           )}
           {noRead.map((notif, i) => (
-            <div className="notification" key={i}>
-              <ReactMarkdown source={notif.description} />
+            <div className="flex" key={i}>
+              <span className="type-notification">
+                {getTypeIcon(notif.type)}
+              </span>
+              <div className="notification">
+                <ReactMarkdown source={notif.description} />
+              </div>
             </div>
           ))}
           <MenuItem
@@ -171,7 +177,12 @@ export default function LoggedUser() {
       </Menu>
 
       {/*Componente chats*/}
-      <IconButton color="inherit">
+      <IconButton
+        color="inherit"
+        onClick={() => {
+          router.push("/chats");
+        }}
+      >
         <Badge badgeContent={1} color="secondary">
           {/* <Chat /> */}
           📩
@@ -179,6 +190,10 @@ export default function LoggedUser() {
       </IconButton>
       <style jsx>
         {`
+          .flex {
+            display: flex;
+            align-items: center;
+          }
           .logged {
             display: flex;
             flex-wrap: wrap;

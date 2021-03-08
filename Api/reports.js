@@ -66,7 +66,6 @@ export async function updateReport(id, isAccepted, action, desc, jwt){
         Authorization: `Bearer ${jwt}`,
       },
     });
-    console.log(res.data);
   } catch (error) {
     console.log(error.response);
   }

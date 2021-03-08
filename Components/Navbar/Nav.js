@@ -20,7 +20,9 @@ import { getCategories } from "../../Api/categories";
 
 export default function Navbar({ setLDTheme }) {
   const router = useRouter();
-  const { UState, NDispatch, socket } = useContext(UserState);
+  const { UState, NDispatch, CDispatch, CState, socket } = useContext(
+    UserState
+  );
   const { ADispatch } = useContext(AlertState);
 
   const [categories, setCategories] = useState([]);
@@ -34,10 +36,41 @@ export default function Navbar({ setLDTheme }) {
 
   //On select a category, set filters
   function selectCategory(e) {
-    const cat_ = JSON.parse(e.target.value)
+    const cat_ = JSON.parse(e.target.value);
     setSelectedCat(e.target.value);
-    setFilters({...filters, category_id: cat_.id, category: cat_.name})
+    setFilters({ ...filters, category_id: cat_.id, category: cat_.name });
   }
+
+  //When the user receives a message, then update the chat state
+  useEffect(() => {
+    if (socket) {
+      socket.once("push_message", (data) => {
+        const parsed_message = JSON.parse(data);
+        
+        const update_chat = CState.map((chat) => {
+          if (chat.id === parsed_message.chat.id) {
+            chat.messages = [...chat.messages, parsed_message];
+            const who = chat.who_start_it==parsed_message.sent_by
+            console.log(who)
+            
+            chat[!who?"noread_sender":"noread_receiver"] = chat[!who?"noread_sender":"noread_receiver"] +1
+            return chat;
+          } else {
+            return chat;
+          }
+        });
+        CDispatch({ type: "setChats", payload: update_chat });
+      });
+
+      socket.once("push_chat", (data) => {
+        const parsed_chat = JSON.parse(data);
+        console.log(parsed_chat)
+        CDispatch({ type: "pushChat", payload: parsed_chat });
+      });
+
+
+    }
+  }, [CState]);
 
   //Notifications handler
   useEffect(() => {
@@ -68,25 +101,25 @@ export default function Navbar({ setLDTheme }) {
     if (filters) {
       aux_filters = { ...filters };
     }
-
     aux_filters["word"] = word;
+    
+    let query = "?"
 
-    let query = `?province=${filters.province}&city=${filters.city}&`;
-
-    if (aux_filters.category_id) {
-      query += `category_id=${aux_filters.category_id}&`;
+    if (aux_filters.category_id) { 
+      query += `${aux_filters.is_profile==true?"categories":"category"}=${aux_filters.category_id}&`;
     }
-
-    query += word !== "" ? "&word=" + word : "";
 
     if (
       !aux_filters.is_profile === undefined ||
       aux_filters.is_profile === true
     ) {
+      query += `location.province=${filters.province}&location.city=${filters.city}`;
       router.push(`/perfiles${query}`);
     } else {
+      query += `public_user.location.province=${filters.province}&public_user.location.city=${filters.city}&`;
+      query += word !== "" ? "&title_contains=" + word+"&" : "";
       if (aux_filters.category_id)
-        query += `category_id=${aux_filters.category_id}&type=${aux_filters.typePublication}`;
+        query += `type=${aux_filters.typePublication}`;
 
       router.push(`/publicaciones${query}`);
     }
@@ -105,8 +138,8 @@ export default function Navbar({ setLDTheme }) {
   }
 
   return (
-    <div className="background-primary-1">
-      <div className={`centering general-width ${styles.navbar_container}`}>
+    <>
+      <div className={`background-primary-1 centering  ${styles.navbar_container}`}>
         <div className={styles.brand}>
           <Image src="/icono2.png" layout="intrinsic" width={75} height={75} />
           <Typography component="h1" variant="h5">
@@ -241,6 +274,6 @@ export default function Navbar({ setLDTheme }) {
           font-size: 2.5rem;
         }
       `}</style>
-    </div>
+    </>
   );
 }

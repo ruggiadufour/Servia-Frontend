@@ -74,7 +74,6 @@ export default function Filters({ open, setOpen, applyFilters, categories }) {
     setSelectedCat(e.target.value);
 
     let aux_cat = JSON.parse(e.target.value);
-    console.log(aux_cat);
 
     let filters_ = { ...filters };
     filters_["category_id"] = aux_cat.id;
@@ -84,14 +83,9 @@ export default function Filters({ open, setOpen, applyFilters, categories }) {
   }
 
   function saveFilters() {
-    console.log(filters);
     applyFilters({ ...filters, ...location });
     setOpen(false);
   }
-
-  useEffect(() => {
-    console.log(location);
-  }, [location]);
 
   return (
     <Dialog

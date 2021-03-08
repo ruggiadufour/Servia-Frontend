@@ -1,15 +1,17 @@
 import { useState, useContext } from "react";
 import axios from "axios";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import { setCookie } from "nookies";
+import Meta from '../../Components/Meta'
 //States
 import { AlertState } from "../../States/Alert";
 import { UserState } from "../../States/User";
 import RegisterModify from "../../Components/Session/Register-Modify";
 
+
 export default function SignIn() {
   const API = process.env.NEXT_PUBLIC_API;
-  const router = useRouter()
+  const router = useRouter();
   const { ADispatch } = useContext(AlertState);
   const { UDispatch } = useContext(UserState);
 
@@ -18,16 +20,24 @@ export default function SignIn() {
   const [profile, setProfile] = useState([]);
 
   return (
-    <RegisterModify
-      submit={signIn}
-      loading={loading}
-      setLoading={setLoading}
-      message={message}
-      setMessage={setMessage}
-      setProfile={setProfile}
-      profile={profile}
-      register={true}
-    />
+    <>
+      <Meta
+        title="Servia | Registrar usuario"
+        desc="Creá una cuenta en servia y encontrá tu servicio ideal. Si sos proveedor de algún servicio creá tu perfil y promocioná tu servicios gratuitamente."
+        canonical={`https://servia.ar/sesion/registrar`}
+        keywords={`registrar usuario en servia, registrar servia, crear cuenta, crear sesion, signin`}
+      />
+      <RegisterModify
+        submit={signIn}
+        loading={loading}
+        setLoading={setLoading}
+        message={message}
+        setMessage={setMessage}
+        setProfile={setProfile}
+        profile={profile}
+        register={true}
+      />
+    </>
   );
 
   async function signIn(user) {
@@ -41,7 +51,7 @@ export default function SignIn() {
       })
       .then((response) => {
         setLoading(false);
-        
+
         ADispatch({
           type: "setAlert",
           payload: {
@@ -91,10 +101,10 @@ export default function SignIn() {
         setLoading(false);
       });
   }
-  
+
   function getFormData(user) {
     const formData = new FormData();
-    if (profile.length!==0) formData.append("files.profile", profile[0]);
+    if (profile.length !== 0) formData.append("files.profile", profile[0]);
 
     formData.append(
       "data",
@@ -112,12 +122,12 @@ export default function SignIn() {
           phone: user.phone,
           description: user.description,
           state: user.state,
-          categories: user.categories
+          categories: user.categories,
         },
-        location:{
+        location: {
           city: user.city,
           province: user.province,
-        }
+        },
       })
     );
 

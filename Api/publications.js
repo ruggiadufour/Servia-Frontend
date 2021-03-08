@@ -3,12 +3,14 @@ import axios from 'axios'
 
 import fetch from "isomorphic-unfetch";
 
-export async function getPublications(query) {
+export async function getPublications(url) {
+  
+  const real_url = url.replace("publicaciones", "publications");
+  
   let data;
   try {
-    let res = await fetch(API + "/publications", {
-      method: "POST",
-      body: JSON.stringify(query),
+    let res = await fetch(API + real_url, {
+      method: "get",
       headers: {
         "Content-Type": "application/json",
       },

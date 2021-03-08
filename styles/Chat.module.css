@@ -1,0 +1,851 @@
+.container-chat {
+    display: flex;
+    flex-direction: row;
+    max-height: calc(100vh - 130px);
+    min-height: calc(100vh - 130px);
+    overflow: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.chat-list {
+    min-width: 200px;
+    max-width: 300px;
+    overflow: auto;
+}
+
+.right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-list {
+    flex: 1;
+    min-width: 55px;
+    overflow: auto;
+}
+
+.input-area {
+    height: 50px;
+    background: red;
+}
+
+/* Button component */
+.rce-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 8px;
+    text-align: center;
+    box-sizing: border-box;
+    background: #3979aa;
+    color: white;
+    transition: all 0.15s ease;
+    user-select: none;
+    border: none;
+    outline: none;
+    border: none;
+    position: relative;
+}
+
+.rce-button-icon--container {
+    display: flex;
+    align-items: center;
+}
+
+.rce-button:hover {
+    opacity: 0.8;
+}
+
+.rce-button:active {
+    opacity: 0.6;
+}
+
+.rce-button.outline {
+    background: rgba(0, 0, 0, 0) !important;
+    border: 1px solid #3979aa;
+    color: #3979aa;
+}
+
+.rce-button.outline:hover {
+    opacity: 0.6;
+}
+
+.rce-button.outline:active {
+    opacity: 0.3;
+}
+
+.rce-button.transparent {
+    background: rgba(0, 0, 0, 0) !important;
+}
+
+.rce-button.transparent:hover {
+    opacity: 0.6;
+}
+
+.rce-button.transparent:active {
+    opacity: 0.3;
+}
+
+.rce-button-icon {
+    position: relative;
+    font-size: 18px;
+    display: flex;
+    padding: 0 3px;
+}
+
+.rce-button-badge{
+    border-radius: 4px;
+    padding: 4px;
+    background: #f64b34;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: -7px;
+    top:-7px;
+    font-size: 10px;
+}
+
+.rce-button.circle {
+    min-width: 35px;
+    min-height: 35px;
+    border: 1px solid #3979aa;
+    border-radius: 100%;
+}
+
+/* ChatItem component */
+.rce-container-citem {
+    flex-direction: column;
+    display: block;
+    overflow: hidden;
+    min-width: 240px;
+}
+
+.rce-container-citem.rce-citem-status-encircle {
+    position: relative;
+}
+
+.rce-citem {
+    position: relative;
+    background: white;
+    display: flex;
+    flex-direction: row;
+    height: 72px;
+    cursor: pointer;
+    user-select: none;
+    max-width: 100%;
+    overflow: hidden;
+    min-width: 240px;
+}
+
+.rce-citem:hover {
+    background: #f9f9f9;
+}
+
+.rce-citem-avatar {
+    position: relative;
+    padding: 0 15px 0 13px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.rce-citem-status {
+    width: 20px;
+    height: 20px;
+    bottom: 10px;
+    right: 10px;
+    position: absolute;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ccc;
+}
+
+.rce-citem-avatar.rce-citem-status-encircle .rce-citem-status {
+    left:0;
+    right:0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    margin: auto;
+    border-radius: 100%;
+}
+
+.rce-citem-avatar img {
+    width: 50px;
+    height: 50px;
+    border: none !important;
+    background: #ccc;
+    border-radius: 100%;
+    overflow: hidden;
+    font-size: 10px;
+    text-align: center;
+    line-height: 50px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rce-citem-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 15px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    overflow: hidden;
+}
+
+.rce-citem-body--top {
+    display: flex;
+}
+
+.rce-citem-body--bottom {
+    margin-top: 4px;
+    display: flex;
+}
+
+.rce-citem-body--bottom-title, .rce-citem-body--top-title {
+    flex: 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.rce-citem-body--top-title {
+    font-size: 16px;
+}
+
+.rce-citem-body--bottom-title {
+    color: #555;
+    font-size: 15px;
+}
+
+.rce-citem-body--top-time {
+    font-size: 12px;
+    color: rgba(0,0,0,0.4)
+}
+
+.rce-citem-body--bottom-status {
+    margin-left: 3px;
+}
+
+.rce-citem-body--bottom-status span {
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    border-radius: 100%;
+    background: red;
+}
+
+
+/* ChatList component */
+.rce-container-clist {
+    display: block;
+    overflow: auto;
+}
+
+
+/* Input component */
+.rce-container-input {
+    display: flex;
+    min-width: 100%;
+    box-sizing: border-box;
+    flex-direction: row;
+    background: #fff;
+    align-items: center;
+}
+
+.rce-input {
+    flex: 1;
+    height: 40px;
+    padding: 0 5px;
+    border: none;
+    border-radius: 5px;
+    color: #333;
+    font-size: 14px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.rce-input-textarea {
+    height: 37px;
+    padding: 10px 5px;
+    resize: none;
+}
+
+.rce-input-buttons {
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+}
+
+.rce-input-buttons > * {
+    display: flex;
+    flex-direction: row;
+}
+
+.rce-input-buttons .rce-button:nth-child(even) {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.rce-input-buttons .rce-button:last-child {
+    margin-right: 0;
+}
+
+.rce-left-padding {
+    padding-left: 10px;
+    padding-right: 0px !important;
+}
+
+.rce-right-padding {
+    padding-right: 10px;
+    padding-left: 0px !important;
+}
+
+.rce-input::placeholder {
+    color: #afafaf;
+}
+
+/* MessageList component */
+.rce-container-mlist {
+    position: relative;
+    display: flex;
+}
+
+.rce-mlist {
+    display: block;
+    overflow: auto;
+    position: relative;
+    flex: 1;
+}
+
+.rce-mlist-down-button {
+    position: absolute;
+    right: 10px;
+    bottom: 15px;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.05), 0 2px 5px 0 rgba(0,0,0,0.1);
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    cursor: pointer;
+    transition: 200ms;
+}
+
+.rce-mlist-down-button:hover {
+    opacity: 0.7;
+}
+
+.rce-mlist-down-button--badge {
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    background: red;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    font-size: 12px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+}
+
+
+/* SideBar component */
+.rce-sbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    box-sizing: border-box;
+    min-height: 100%;
+}
+
+.rce-sbar.light {
+    background: #f4f4f4;
+}
+
+.rce-sbar.dark {
+    background: #2f414c;
+}
+
+.rce-sbar-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 100%;
+}
+
+.rce-sbar-item > * {
+    display: flex;
+    flex-direction: column;
+}
+
+.rce-sbar-item__center {
+    margin: 15px 0;
+}
+
+
+/* Avatar */
+.rce-avatar-container {
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rce-avatar-container .rce-avatar {
+    width: 100%;
+    height: 100%;
+}
+
+.rce-avatar-container.flexible .rce-avatar {
+    height: auto !important;
+    width: 100% !important;
+    border-radius: unset !important;
+    overflow: unset !important;
+}
+
+.rce-avatar-container.default{
+    width: 25px;
+    height: 25px;
+}
+
+.rce-avatar-container.rounded{
+    border-radius: 5px;
+}
+
+.rce-avatar-container.circle{
+    border-radius: 100%;
+}
+
+.rce-avatar-container.xsmall{
+    width: 30px;
+    height: 30px;
+}
+
+.rce-avatar-container.small{
+    width: 35px;
+    height: 35px;
+}
+
+.rce-avatar-container.medium{
+    width: 40px;
+    height: 40px;
+}
+
+.rce-avatar-container.large{
+    width: 45px;
+    height: 45px;
+}
+
+.rce-avatar-container.xlarge{
+    width: 55px;
+    height: 55px;
+}
+
+@keyframes avatarLazy {
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:.5;
+    }
+    100% {
+        opacity:1;
+    }
+}
+
+.rce-avatar-lazy {
+    animation: avatarLazy normal 2s infinite ease-in-out;
+}
+
+.rce-avatar-container.rce-citem-avatar-encircle-status {
+    box-sizing: border-box;
+    position: relative;
+}
+
+.rce-avatar-letter {
+    margin-top: 5px;
+    font-size: 20px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rce-avatar-letter-background{
+    height: 35px;
+    width: 35px;
+    border-radius: 20px;
+}
+
+/* MessageBox component */
+.rce-container-mbox {
+    flex-direction: column;
+    display: block;
+    overflow: hidden;
+    min-width: 200px;
+}
+
+.rce-mbox-forward {
+    width: 30px;
+    height: 30px;
+    border-radius: 20px;
+    background: #fff;
+    position: absolute;
+    /*display: none;*/
+    flex-direction: row;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 5px 0 rgba(164, 164, 164, 1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.rce-mbox-forward-left {
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    left: -50px;
+}
+
+.rce-mbox-forward-right {
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    right: -50px;
+}
+
+.rce-mbox-reply-btn-left {
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    left: -85px;
+}
+
+.rce-mbox-reply-btn-right {
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    right: -85px;
+}
+
+.rce-container-mbox:hover .rce-mbox-forward-left {
+    opacity: 1;
+    visibility: visible;
+}
+
+.rce-container-mbox:hover .rce-mbox-forward-right {
+    opacity: 1;
+    visibility: visible;
+}
+
+.rce-container-mbox:hover .rce-mbox-reply-btn-left {
+    opacity: 1;
+    visibility: visible;
+}
+
+.rce-container-mbox:hover .rce-mbox-reply-btn-right {
+    opacity: 1;
+    visibility: visible;
+}
+
+.rce-mbox {
+    position: relative;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .2);
+    border-top-left-radius: 0px;
+    margin-left: 20px;
+    margin-right: 5px;
+    margin-top: 3px;
+    flex-direction: column;
+    margin-bottom: 3px;
+    padding: 6px 9px 8px 9px;
+    float: left;
+    min-width: 140px;
+}
+
+.rce-mbox.message-focus {
+    animation-iteration-count: 2;
+    -webkit-animation-iteration-count: 2;
+    -webkit-animation-duration: 1s;
+    animation-name: message-box-default-focus;
+    animation-duration: 1s;
+}
+
+@-webkit-keyframes message-box-default-focus {
+    from {background-color: #fff;}
+    to {background-color: #dfdfdf;}
+}
+
+.rce-mbox-body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.rce-mbox.rce-mbox-right {
+    float: right;
+    margin-left: 5px;
+    margin-right: 20px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 5px;
+}
+
+.rce-mbox.rce-mbox-right.message-focus {
+    animation-iteration-count: 2;
+    -webkit-animation-iteration-count: 2;
+    -webkit-animation-duration: 1s;
+    animation-name: message-box-right-focus;
+    animation-duration: 1s;
+}
+
+@-webkit-keyframes message-box-right-focus {
+    from {background-color: #d4f1fb;}
+    to {background-color: #b8dae6;}
+}
+
+.rce-mbox-text {
+    font-size: 13.6px;
+    word-break: break-word;
+}
+
+.rce-mbox-text:after {
+    content: "\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0"
+}
+
+.rce-mbox-time {
+    text-align: right;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 12px;
+    position: absolute;
+    right: -4px;
+    bottom: -5px;
+}
+
+.rce-mbox-time.non-copiable:before {
+    content: attr(data-text);
+}
+
+.rce-mbox-time-block {
+    /*position: relative;*/
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin-right: -6px;
+    margin-left: -6px;
+    padding-top: 5px;
+    padding-right: 3px;
+    padding-bottom: 2px;
+    background: linear-gradient(to top, rgba(0,0,0,0.33), transparent);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: #fff;
+}
+
+.rce-mbox--clear-padding {
+    padding-bottom: 3px;
+}
+
+.rce-mbox.rce-mbox--clear-notch {
+    border-radius: 5px 5px 5px 5px !important;
+}
+
+.rce-mbox-right-notch {
+    position: absolute;
+    right: -14px;
+    top: 0px;
+    width: 15px;
+    height: 15px;
+    fill: white;
+    filter: drop-shadow( 2px 0px 1px rgba(0, 0, 0, .2));
+}
+
+.rce-mbox-right-notch.message-focus {
+    animation-iteration-count: 2;
+    -webkit-animation-iteration-count: 2;
+    -webkit-animation-duration: 1s;
+    animation-name: message-right-notch-focus;
+    animation-duration: 1s;
+}
+
+@-webkit-keyframes message-right-notch-focus {
+    from {fill: #d4f1fb;}
+    to {fill: #b8dae6;}
+}
+
+.rce-mbox-left-notch {
+    position: absolute;
+    left: -14px;
+    top: 0px;
+    width: 15px;
+    height: 15px;
+    fill: white;
+}
+
+.rce-mbox-left-notch.message-focus {
+    animation-iteration-count: 2;
+    -webkit-animation-iteration-count: 2;
+    -webkit-animation-duration: 1s;
+    animation-name: message-left-notch-focus;
+    animation-duration: 1s;
+}
+
+@-webkit-keyframes message-left-notch-focus {
+    from {fill: #fff;}
+    to {fill: #dfdfdf;}
+}
+
+.rce-mbox-title {
+    margin: 0;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 13px;
+    color: #4f81a1;
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.rce-mbox-title:hover {
+    text-decoration: underline;
+}
+
+.rce-mbox-title--clear {
+    margin-bottom: 5px;
+}
+
+.rce-mbox-status {
+    margin-left: 3px;
+    font-size: 15px;
+}
+
+.rce-mbox-title > .rce-avatar-container {
+    margin-right: 5px;
+}
+
+/* SystemMessage component */
+.rce-container-smsg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rce-smsg {
+    position: relative;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px 1px rgba(0,0,0,.2);
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0px;
+    padding: 6px 9px 8px 9px;
+    float: left;
+    max-width: 70%;
+    align-items: center;
+    justify-content: center;
+}
+
+.rce-smsg-text {
+    text-align: center;
+    display: inline-block;
+    font-size: 15px;
+}
+
+/* ReplyMessage component */
+.rce-mbox-reply {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    margin-top: -3px;
+    margin-bottom: 6px;
+    margin-right: -6px;
+    margin-left: -6px;
+    border-radius: 5px;
+    background: #ececec;
+    padding: 0 5px;
+    padding-right: 0;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 200ms;
+    user-select: none;
+}
+
+.rce-mbox-reply.rce-mbox-reply-border {
+    border-left: 5px solid;
+}
+
+.rce-mbox-reply:hover {
+    opacity: 0.85;
+}
+
+.rce-mbox-reply-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3px 0;
+    flex: 1;
+}
+
+.rce-mbox-reply-owner {
+    font-size: 13px;
+}
+
+.rce-mbox-reply-message {
+    color: #5a5a5a;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.rce-mbox-reply-right {
+    width: 40px;
+    height: 40px;
+}
+
+.rce-mbox-reply-right img {
+    width: 100%;
+}
+
+.rce-mbox-reply-text {
+    padding: 5px 0;
+    width: 250px;
+    margin-left: -6px;
+    margin-right: -6px;
+}

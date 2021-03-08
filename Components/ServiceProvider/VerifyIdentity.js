@@ -131,7 +131,7 @@ export default function VerificarMiIdentidad() {
               setFiles={setImages}
               Files={images}
               amount={2}
-              preloadImages={UState.user.dni_image.photos}
+              preloadImages={UState.user.dni_image?.photos?UState.user.dni_image.photos:[]}
               setToDelete={() => {}}
               disabled={
                 UState.user.public_user.verified ||

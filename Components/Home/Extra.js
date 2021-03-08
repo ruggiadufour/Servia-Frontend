@@ -1,18 +1,37 @@
 import { Typography } from "@material-ui/core";
 import Image from "next/image";
+import Link from "next/link";
 
 const cards = [
   {
-    title: "Crear tu perfil",
+    title: "Buscá profesionales",
     desc:
-      "Creá tu perfil profesional para que las demás personas puedan ver tus habilidades, trabajos o la información que quieras distinguir.",
-    src_img: "/tester.jpg",
+      "Encontrá profesionales de diferentes áreas, contactálos y lleva a cabo el servicio que necesitás.",
+    src_img: "/svg/search.svg",
   },
   {
-    title: "Crear publicaciones",
+    title: "Solicitá al profesional ideal",
+    desc:
+      "Creá solicitudes de servicios para que un profesional se ofrezca a resolver tu problema.",
+    src_img: "/svg/request.svg",
+  },
+  {
+    title: "Contactá a profesionales",
+    desc:
+      "Hablá directamente al profesional a traves de su número telefónico o hacelo por medio del chat que ofrece Servia.",
+    src_img: "/svg/chatting.svg",
+  },
+  {
+    title: "Creá tu perfil",
+    desc:
+      "Creá tu perfil profesional para que las demás personas puedan ver tus habilidades, trabajos o la información que quieras distinguir.",
+    src_img: "/svg/professional-profile.svg",
+  },
+  {
+    title: "Creá publicaciones",
     desc:
       "Creá publicaciones dónde demuestres un tipo de servicio en particular.",
-    src_img: "/tester.jpg",
+    src_img: "/svg/create-publication.svg",
   },
 ];
 
@@ -24,10 +43,15 @@ export default function Extra() {
           ¿Qué podés hacer en Servia?
         </Typography>
       </div>
-      <div className="centering general-width flex-row">
+      <div className="centering-t general-width flex-row">
         {cards.map((card, i) => (
           <Card key={i} {...card} />
         ))}
+      </div>
+      <div className="general-width centering">
+        <Link href="/preguntas-frecuentes">
+          <a className="text-primary-2">¿Qué más puedo hacer?</a>
+        </Link>
       </div>
       <style jsx>
         {`
@@ -35,6 +59,11 @@ export default function Extra() {
             background-color: gray;
             width: 100%;
             padding: 60px 0;
+          }
+          a {
+            font-size: 20px;
+            text-align: center;
+            text-decoration: underline;
           }
         `}
       </style>

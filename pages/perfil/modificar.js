@@ -1,4 +1,5 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
+import Head from "next/head";
 import axios from "axios";
 import Router from "next/router";
 //States
@@ -14,18 +15,24 @@ export default function Change() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState([]);
-  
+
   return (
-    <RegisterModify
-      submit={changeData}
-      loading={loading}
-      setLoading={setLoading}
-      message={message}
-      setMessage={setMessage}
-      setProfile={setProfile}
-      profile={profile}
-      register={false}
-    />
+    <>
+      <Head>
+        <title>Modificar mi perfil</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <RegisterModify
+        submit={changeData}
+        loading={loading}
+        setLoading={setLoading}
+        message={message}
+        setMessage={setMessage}
+        setProfile={setProfile}
+        profile={profile}
+        register={false}
+      />
+    </>
   );
 
   async function changeData(user) {
@@ -81,8 +88,8 @@ export default function Change() {
 
   function getFormData(user) {
     const formData = new FormData();
-    console.log(profile)
-    if (profile.length!==0) formData.append("files.profile", profile[0]);
+    console.log(profile);
+    if (profile.length !== 0) formData.append("files.profile", profile[0]);
     formData.append(
       "data",
       JSON.stringify({
@@ -99,12 +106,12 @@ export default function Change() {
           phone: user.phone,
           description: user.description,
           state: user.state,
-          categories: user.categories, 
+          categories: user.categories,
         },
-        location:{
+        location: {
           city: user.city,
           province: user.province,
-        }
+        },
       })
     );
 

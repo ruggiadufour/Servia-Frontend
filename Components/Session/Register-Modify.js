@@ -188,6 +188,7 @@ export default function RegisterModify({
               variant="filled"
               required
               className="w-100"
+              disabled={!register && UState?.user?.public_user.verified}
             />
           </Grid>
 
@@ -201,7 +202,17 @@ export default function RegisterModify({
               variant="filled"
               required
               className="w-100"
+              disabled={!register && UState?.user?.public_user.verified}
             />
+          </Grid>
+          <Grid item xs={12}>
+            {!register && UState?.user?.public_user.verified && (
+              <Typography color="error">
+                Los usuarios modificados no pueden modificar su nombre y
+                apellido. Si realmente quiere modificarlos, contacte a un
+                administrador.
+              </Typography>
+            )}
           </Grid>
 
           {/* Locations */}
@@ -492,7 +503,7 @@ function SetCategoriesToProvide({
       setCategories(categories.filter((cat) => cat !== Number(id)));
     }
   }
-  
+
   return (
     <>
       {Object.entries(allCategories).map((cat, i) => (

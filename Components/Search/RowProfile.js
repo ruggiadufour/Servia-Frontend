@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext } from "react";
 //Material-UI
 import {
   Hidden,
@@ -14,8 +14,12 @@ import Verificado from "@material-ui/icons/CheckCircleOutline";
 //Componentes
 import Estrellas from "../Estrellas.js";
 import Report from "../Publication/Report";
+import Contact from "../ContactProvider";
+
+import { UserState } from "../../States/User";
 
 export default function RowProfile({ profile }) {
+  const { UState } = useContext(UserState);
   function getImage() {
     let image = profile?.profile?.url
       ? process.env.NEXT_PUBLIC_API + profile.profile.url
@@ -26,6 +30,7 @@ export default function RowProfile({ profile }) {
   if (!profile) {
     return <h1>Cargando</h1>;
   }
+
 
   return (
     <div className="card-row background-2">
@@ -74,17 +79,24 @@ export default function RowProfile({ profile }) {
         ))}
 
         <Estrellas valor={4} clickeable={false} cambiarValor={() => {}} />
+
+        {UState?.user.public_user.id !== profile.id && (
+          <Contact fixed={false} profile={profile} type={0} />
+        )}
       </div>
 
       <div className="w-100">
         {profile.state && (
           <Alert variant="outlined" severity="info">
-            Sus servicios están pausados. Para cambiar esto seleccione la opcion "👨‍🔧 Modificar mi perfil" y por ultimo seleccionar "👷‍♂️ Soy proveedor de servicios" y guardar.
+            Sus servicios están pausados. Para cambiar esto seleccione la opcion
+            "👨‍🔧 Modificar mi perfil" y por ultimo seleccionar "👷‍♂️ Soy proveedor
+            de servicios" y guardar.
           </Alert>
         )}
         {profile.blocked && (
           <Alert variant="outlined" severity="error">
-            Su perfil se encuentra bloqueado debido a que incumple alguna regla. Por favor, modifíquelo así un administrador lo desbloquea.
+            Su perfil se encuentra bloqueado debido a que incumple alguna regla.
+            Por favor, modifíquelo así un administrador lo desbloquea.
           </Alert>
         )}
       </div>

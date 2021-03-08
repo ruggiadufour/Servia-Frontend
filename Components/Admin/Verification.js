@@ -27,6 +27,7 @@ import Images from "react-lightbox-component";
 
 import { useToVerify } from "../../Api/logged_user";
 import { UserState } from "../../States/User";
+import { AlertState } from "../../States/Alert";
 
 
 export default function Verification() {
@@ -110,11 +111,11 @@ function Request({ user }) {
 //para ver toda la información es necesario desplegarla, el siguiente componente permite eso.
 function DeployData({ user }) {
   const { socket, UState } = useContext(UserState);
+  const { ADispatch } = useContext(AlertState);
   //states
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
   const [description, setDescription] = useState("");
-  const [message, setMessage] = useState("");
 
   //Función que se ejecuta cada vez que se acciona el desplegar información (mostrando u ocultando la información)
   const handleClick = () => {
@@ -133,8 +134,23 @@ function DeployData({ user }) {
     }
   }, [user]);
 
+  //Emit a socket event on accept o reject
   function response(isAccepted){
+    let desc_to_admin = ""
+    if(!isAccepted && description===""){
+      desc_to_admin = "Tenés que escribir un mensaje de por qué se ha rechazado la solicitud"
+    }
+
     socket.emit("setVerification",JSON.stringify({id: user.id, description, isAccepted, jwt:UState.jwt }))
+
+    ADispatch({
+      type: "setAlert",
+      payload: {
+        desc: desc_to_admin === ""?"La solicitud ha sido respondida.":desc_to_admin,
+        type: desc_to_admin === ""?"success":"warning",
+        open: true,
+      },
+    });
   }
 
   return (
@@ -170,12 +186,6 @@ function DeployData({ user }) {
                 }}
               ></TextField>
             </Grid>
-
-            <Hidden xlDown={message === "" || description !== ""}>
-              <Grid item xs={12}>
-                <Typography color="secondary">{message}</Typography>
-              </Grid>
-            </Hidden>
 
             <div align="center">
               <Button color="secondary" onClick={()=>{response(true)}} startIcon={<Aceptar />}>

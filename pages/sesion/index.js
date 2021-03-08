@@ -15,6 +15,7 @@ import axios from "axios";
 import { setCookie } from "nookies";
 import { useRouter } from "next/router";
 import { UserState } from "../../States/User";
+import Meta from "../../Components/Meta";
 import Link from "next/link";
 
 export default function IniciarSesion({ mensaje }) {
@@ -57,8 +58,10 @@ export default function IniciarSesion({ mensaje }) {
       .then(async (response) => {
         console.log("Well done!");
 
-        const user_ = {...response.data.user};
+        const user_ = { ...response.data.user };
         delete user_.notifications;
+        delete user_.dni_image;
+        delete user_.chats;
 
         setCookie(
           null,
@@ -99,6 +102,12 @@ export default function IniciarSesion({ mensaje }) {
 
   return (
     <>
+      <Meta
+        title="Servia | Iniciar sesión"
+        desc="Iniciar sesión en Servia. Servia es un sitio web en donde podés encontrar servicios domésticos, iniciá sesión y encontrá a tu profesional ideal."
+        canonical={`https://servia.ar/sesion`}
+        keywords={`iniciar sesion, servia iniciar, login`}
+      />
       <div className="login centering p-15">
         <Grid container direction="row" justify="center" spacing={2}>
           <Grid item xs={12}>
@@ -113,7 +122,7 @@ export default function IniciarSesion({ mensaje }) {
               value={data.identifier}
               name="identifier"
               id="filled-basic"
-              label="Correo electrónico"
+              label="📧 Correo electrónico"
               variant="filled"
               className="w-100"
               required
@@ -128,7 +137,7 @@ export default function IniciarSesion({ mensaje }) {
               value={data.password}
               required
               type="password"
-              label="Contraseña"
+              label="🔒 Contraseña"
               variant="filled"
               className="w-100"
             />
@@ -163,7 +172,7 @@ export default function IniciarSesion({ mensaje }) {
 
           <Grid item xs={12}>
             <Typography variant="body1" align="center">
-              {`¿Eres nuevo en el sitio? `}
+              {`Sos nuevo acá? `}
             </Typography>
             <Typography variant="body1" align="center">
               <Link href="/sesion/registrar">

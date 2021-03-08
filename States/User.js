@@ -1,5 +1,6 @@
-import { useReducer, createContext, useEffect , useState} from "react";
+import { useReducer, createContext, useEffect, useState } from "react";
 import io from "socket.io-client";
+import {getChats} from '../Api/chats'
 
 const initState = null;
 
@@ -26,9 +27,21 @@ const notificationsReducer = (state, action) => {
     case "setNotifications":
       return action.payload;
     case "pushNotification":
-      return [ action.payload, ...state];
+      return [action.payload, ...state];
     default:
       return { ...state };
+  }
+};
+const chatsReducer = (state, action) => {
+  switch (action.type) {
+    case "setChats":
+      return action.payload;
+    case "pushChat":
+      return [...state, action.payload];
+    case "pushMessage":
+      return [...state];
+    default:
+      return [ ...state ];
   }
 };
 
@@ -36,30 +49,54 @@ const UserState = createContext(initState);
 
 function ProviderUserState({ children, session }) {
   const [UState, UDispatch] = useReducer(userReducer, session);
-  const [NState, NDispatch] = useReducer(notificationsReducer, session?session.user.notifications.reverse():null);
+  const [NState, NDispatch] = useReducer(
+    notificationsReducer,
+    session ? session.user.notifications.reverse() : null
+  );
+  const [CState, CDispatch] = useReducer(chatsReducer, []);
+  const [socket, setSocket] = useState(null);
 
-  const [socket, setSocket] = useState(null)
+  useEffect(async() => {
+    console.log(CState)
+  }, [CState]);
 
-  useEffect(()=>{
-    console.log(UState)
+  useEffect(async() => {
+    console.log(UState);
     //If this false means the user is not logged
-    if(socket===null && UState){
+    if (socket === null && UState) {
       //Initialize the socket connection
-      const socket_aux = io.connect(process.env.NEXT_PUBLIC_API)
-      socket_aux.emit("setUser",JSON.stringify({id: UState.user.id, role: UState.user.role.id}))
-      
-      socket_aux.on("updateUserData",(data)=>{
-        console.log(data)
-        UDispatch({type:"setUser",payload:{user:JSON.parse(data)}})
-      })
+      const socket_aux = io.connect(process.env.NEXT_PUBLIC_API);
+      socket_aux.emit(
+        "setUser",
+        JSON.stringify({ id: UState.user.id, role: UState.user.role.id })
+      );
 
-      //store the socket object
-      setSocket(socket_aux)
+      socket_aux.on("updateUserData", (data) => {
+        console.log(data);
+        UDispatch({ type: "setUser", payload: { user: JSON.parse(data) } });
+      });
+      
+      //Setting socket state
+      setSocket(socket_aux);
+
+      //Setting chats
+      const {data} = await getChats(UState.user.public_user.id,UState.jwt)
+      CDispatch({type:"setChats", payload: data})
     }
-  },[UState])
+  }, [UState]);
 
   return (
-    <UserState.Provider value={{ UState: UState, UDispatch: UDispatch, NState: NState, NDispatch: NDispatch, socket:socket }}>
+    <UserState.Provider
+      value={{
+        UState,
+        UDispatch,
+        NState,
+        NDispatch,
+        CState,
+        CDispatch,
+        socket,
+      }}
+    >
       {children}
     </UserState.Provider>
   );

@@ -23,6 +23,7 @@ import Verified from "@material-ui/icons/CheckCircleOutline";
 import Stars from "../Estrellas";
 import AlertDialog from "../YesNoDialog";
 import Report from "../Publication/Report";
+import Contact from "../ContactProvider";
 
 //API client
 import { modifyPublication, deletePublication } from "../../Api/publications";
@@ -113,10 +114,10 @@ export default function RowPublication({ publication, removeOne }) {
       <div className="card-info">
         <Report id={thisPublicaction.id} type={false} />
 
-        <Typography align="left" component="h5" variant="h4">
+        <Typography align="left" component="h5" variant="h5">
           {thisPublicaction.title}
         </Typography>
-        <Typography align="left" component="h5" variant="h5">
+        <Typography align="left" component="h5" variant="h6">
           {`${thisPublicaction.public_user.name} ${thisPublicaction.public_user.surname}`}
           <Hidden xlDown={!thisPublicaction.public_user.verified}>
             <Tooltip title="Usuario verificado">
@@ -153,7 +154,7 @@ export default function RowPublication({ publication, removeOne }) {
         <Stars valor={4} clickeable={false} cambiarValor={() => {}} />
 
         <Button variant="contained" color="primary" onClick={seeMore}>
-          Leer más
+          Ver más
         </Button>
 
         {openDialog && (
@@ -161,6 +162,13 @@ export default function RowPublication({ publication, removeOne }) {
             title={`¿Realmente quiere eliminar ${thisPublicaction.title}?`}
             message="La publicación se eliminará permanentemente."
             callback={deleteThis}
+          />
+        )}
+        {UState?.user.public_user.id !== thisPublicaction.public_user.id && (
+          <Contact
+            fixed={false}
+            profile={thisPublicaction.public_user}
+            type={thisPublicaction.type?1:2}
           />
         )}
       </div>
@@ -202,7 +210,7 @@ export default function RowPublication({ publication, removeOne }) {
             max-width: 500px;
             height: 100%;
             display: flex;
-            
+
             flex-wrap: wrap;
           }
           .manage-publication {

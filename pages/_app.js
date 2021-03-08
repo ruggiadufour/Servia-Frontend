@@ -33,6 +33,7 @@ function MyApp({ Component, pageProps, session }) {
             justify-content: center;
             margin: auto;
             width: 100%;
+            position: relative;
           }
         `}
       </style>
