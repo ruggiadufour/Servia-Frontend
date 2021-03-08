@@ -76,6 +76,8 @@ export default function IniciarSesion({ mensaje }) {
           }
         );
 
+        console.log(response.data)
+
         NDispatch({
           type: "setNotifications",
           payload: response.data.user.notifications.reverse(),

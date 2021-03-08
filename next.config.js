@@ -1,6 +1,6 @@
 module.exports = {
   env: {
-    NEXT_PUBLIC_API: "http://localhost:1337"
+    NEXT_PUBLIC_API: process.env.API || "https://servia.herokuapp.com"
   },
   serverRuntimeConfig: {
     // Will only be available on the server side
@@ -8,9 +8,8 @@ module.exports = {
   },
   publicRuntimeConfig: {
     // Will be available on both server and client
-    API: "https://prueba-3.herokuapp.com",
   },
   images: {
-    domains: ['http://localhost:1337'],
+    domains: ['http://localhost:1337','https://servia.herokuapp.com'],
   },
 };

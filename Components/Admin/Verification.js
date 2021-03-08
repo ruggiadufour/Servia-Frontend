@@ -22,8 +22,8 @@ import {
 import { Alert } from "@material-ui/lab";
 
 //Componentes
-import "react-lightbox-component/build/css/index.css";
-import Images from "react-lightbox-component";
+// import "react-lightbox-component/build/css/index.css";
+// import Images from "react-lightbox-component";
 
 import { useToVerify } from "../../Api/logged_user";
 import { UserState } from "../../States/User";
@@ -162,7 +162,7 @@ function DeployData({ user }) {
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <Grid container direction="row" alignItems="center" justify="center">
-            <Grid item xs={4} sm={12}>
+            {/* <Grid item xs={4} sm={12}>
               <div align="center">
                 <Images
                   images={images}
@@ -170,7 +170,7 @@ function DeployData({ user }) {
                   thumbnailHeight="100px"
                 />
               </div>
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12}>
               <TextField

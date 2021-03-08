@@ -1,6 +1,6 @@
 import { useReducer, createContext, useEffect, useState } from "react";
 import io from "socket.io-client";
-import {getChats} from '../Api/chats'
+import { getChats } from "../Api/chats";
 
 const initState = null;
 
@@ -41,7 +41,7 @@ const chatsReducer = (state, action) => {
     case "pushMessage":
       return [...state];
     default:
-      return [ ...state ];
+      return [...state];
   }
 };
 
@@ -51,16 +51,16 @@ function ProviderUserState({ children, session }) {
   const [UState, UDispatch] = useReducer(userReducer, session);
   const [NState, NDispatch] = useReducer(
     notificationsReducer,
-    session ? session.user.notifications.reverse() : null
+    session ? session.user?.notifications.reverse() : []
   );
   const [CState, CDispatch] = useReducer(chatsReducer, []);
   const [socket, setSocket] = useState(null);
 
-  useEffect(async() => {
-    console.log(CState)
+  useEffect(async () => {
+    console.log(CState);
   }, [CState]);
 
-  useEffect(async() => {
+  useEffect(async () => {
     console.log(UState);
     //If this false means the user is not logged
     if (socket === null && UState) {
@@ -75,13 +75,13 @@ function ProviderUserState({ children, session }) {
         console.log(data);
         UDispatch({ type: "setUser", payload: { user: JSON.parse(data) } });
       });
-      
+
       //Setting socket state
       setSocket(socket_aux);
 
       //Setting chats
-      const {data} = await getChats(UState.user.public_user.id,UState.jwt)
-      CDispatch({type:"setChats", payload: data})
+      const { data } = await getChats(UState.user.public_user.id, UState.jwt);
+      CDispatch({ type: "setChats", payload: data });
     }
   }, [UState]);
 
