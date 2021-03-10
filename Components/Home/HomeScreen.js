@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import InstallPWA from './InstallPWA'
 export default function HomeScreen() {
   return (
     <>
@@ -9,6 +9,7 @@ export default function HomeScreen() {
               ¡Encontrá tu servicio ideal en Servia!
             </strong>
           </h1>
+          <InstallPWA/>
           <h2 className="text-dark-2 servia-font">
             ¿Necesitas a un profesional ya?
           </h2>
@@ -37,8 +38,6 @@ export default function HomeScreen() {
         .screen-container {
           background-position: center;
           background-size: cover;
-        
-          
 
           min-height: 100vh;
           position: relative;

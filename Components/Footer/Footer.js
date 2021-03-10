@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Instagram, Facebook } from "@material-ui/icons/";
 import { Typography, Grid, AppBar, Toolbar } from "@material-ui/core/";
 import Alert from "../../Components/Alert";
+import InstallPWA from '../../Components/Home/InstallPWA'
 import Contact from "./Contact";
 
 //Componente que se muestra en la sección más baja de todas las vistas, es decir, el footer
@@ -30,18 +31,7 @@ export default function Footer() {
           </Grid>
 
           <Grid item xs={12} sm={4} align="center">
-            <Typography component="h3" variant="h5" align="center" className="text-same-ever">
-              Nuestras redes 📺
-            </Typography>
-            <a href="https://www.facebook.com/RuggiaAngel" target="_blank">
-              <Facebook fontSize="large" />
-            </a>
-            <a
-              href="https://www.instagram.com/ferransolischorvat/"
-              target="_blank"
-            >
-              <Instagram fontSize="large" />
-            </a>
+            <InstallPWA/>
           </Grid>
         </Grid>
       </div>
