@@ -65,10 +65,10 @@ export default function BotonContratar({ isFixed, type, profile }) {
   }
 
   return (
-    <>
+    <div >
       <Button
         variant="contained"
-        color="inherit"
+        color="secondary"
         onClick={handleOpen}
         className="button"
       >
@@ -80,57 +80,58 @@ export default function BotonContratar({ isFixed, type, profile }) {
         aria-describedby="transition-modal-description"
         open={open}
         onClose={handleClose}
-        closeAfterTransition
+        closeAfterTransition={true}
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+        className="flex-col"
       >
-        <div className="modal background-secondary-1 p-15">
-          <div align="center">
-            <Avatar alt="Perfil" src={getImage()} />
+        <Fade in={open}>
+          <div className="background-1 p-15">
+            <div align="center">
+              <Avatar alt="Perfil" src={getImage()} />
+            </div>
+
+            <Typography variant="h5" component="h2" align="center">
+              {`Contactar proveedor ${profile.name} ${profile.surname}`}
+            </Typography>
+
+            <form onSubmit={contact}>
+              <FormControl color="primary" fullWidth>
+                <TextField
+                  onChange={(e) => {
+                    setMessage(e.target.value);
+                  }}
+                  id="filled-basic"
+                  label="Escribí tu mensaje"
+                  variant="filled"
+                  required
+                  multiline
+                  className="w-100"
+                />
+
+                <Button
+                  disabled={cargando}
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                >
+                  Contactar
+                </Button>
+              </FormControl>
+            </form>
           </div>
-
-          <Typography variant="h5" component="h2" align="center">
-            {`Contactar proveedor ${profile.name} ${profile.surname}`}
-          </Typography>
-
-          <form onSubmit={contact}>
-            <FormControl color="primary" fullWidth>
-              <TextField
-                onChange={(e) => {
-                  setMessage(e.target.value);
-                }}
-                id="filled-basic"
-                label="Escribí tu mensaje"
-                variant="filled"
-                required
-                multiline
-                className="w-100"
-              />
-
-              <Button
-                disabled={cargando}
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Contactar
-              </Button>
-            </FormControl>
-          </form>
-        </div>
+        </Fade>
       </Modal>
 
       <style jsx>
-        {`
-          .modal {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-          }
-          .button{
+        {`          
+          .button {
             margin: 10px;
           }
         `}
       </style>
-    </>
+    </div>
   );
 }

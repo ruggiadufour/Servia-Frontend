@@ -161,7 +161,7 @@ export default function Filters({ open, setOpen, applyFilters, categories }) {
             <Grid item xs={12} sm={4} md={4} lg={4}>
               <select
                 name="select"
-                className="select w-100"
+                className="select w-100 text-secondary-2"
                 onChange={selectProvince}
                 value={location.province}
               >
@@ -175,7 +175,7 @@ export default function Filters({ open, setOpen, applyFilters, categories }) {
             <Grid item xs={12} sm={8} md={8} lg={8}>
               <select
                 name="select"
-                className="select w-100"
+                className="select w-100 text-secondary-2"
                 onChange={(e) => {
                   setLocation({
                     ...location,

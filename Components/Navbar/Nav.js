@@ -1,5 +1,5 @@
 //Material-UI
-import { Typography } from "@material-ui/core/";
+import { Button } from "@material-ui/core/";
 //Framework
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -46,14 +46,15 @@ export default function Navbar({ setLDTheme }) {
     if (socket) {
       socket.once("push_message", (data) => {
         const parsed_message = JSON.parse(data);
-        
+
         const update_chat = CState.map((chat) => {
           if (chat.id === parsed_message.chat.id) {
             chat.messages = [...chat.messages, parsed_message];
-            const who = chat.who_start_it==parsed_message.sent_by
-            console.log(who)
-            
-            chat[!who?"noread_sender":"noread_receiver"] = chat[!who?"noread_sender":"noread_receiver"] +1
+            const who = chat.who_start_it == parsed_message.sent_by;
+            console.log(who);
+
+            chat[!who ? "noread_sender" : "noread_receiver"] =
+              chat[!who ? "noread_sender" : "noread_receiver"] + 1;
             return chat;
           } else {
             return chat;
@@ -64,11 +65,9 @@ export default function Navbar({ setLDTheme }) {
 
       socket.once("push_chat", (data) => {
         const parsed_chat = JSON.parse(data);
-        console.log(parsed_chat)
+        console.log(parsed_chat);
         CDispatch({ type: "pushChat", payload: parsed_chat });
       });
-
-
     }
   }, [CState]);
 
@@ -102,11 +101,13 @@ export default function Navbar({ setLDTheme }) {
       aux_filters = { ...filters };
     }
     aux_filters["word"] = word;
-    
-    let query = "?"
 
-    if (aux_filters.category_id) { 
-      query += `${aux_filters.is_profile==true?"categories":"category"}=${aux_filters.category_id}&`;
+    let query = "?";
+
+    if (aux_filters.category_id) {
+      query += `${aux_filters.is_profile == true ? "categories" : "category"}=${
+        aux_filters.category_id
+      }&`;
     }
 
     if (
@@ -117,7 +118,7 @@ export default function Navbar({ setLDTheme }) {
       router.push(`/perfiles${query}`);
     } else {
       query += `public_user.location.province=${filters.province}&public_user.location.city=${filters.city}&`;
-      query += word !== "" ? "&title_contains=" + word+"&" : "";
+      query += word !== "" ? "&title_contains=" + word + "&" : "";
       if (aux_filters.category_id)
         query += `type=${aux_filters.typePublication}`;
 
@@ -139,14 +140,14 @@ export default function Navbar({ setLDTheme }) {
 
   return (
     <>
-      <div className={`background-primary-1 centering  ${styles.navbar_container}`}>
+      <div
+        className={`background-primary-1 centering  ${styles.navbar_container}`}
+      >
         <div className={styles.brand}>
           <Image src="/icono2.png" layout="intrinsic" width={75} height={75} />
-          <Typography component="h1" variant="h5">
-            <Link href="/">
-              <a className="servia servia-font">Servia</a>
-            </Link>
-          </Typography>
+          <Link href="/">
+            <a className="servia servia-font text-same-ever">Servia</a>
+          </Link>
         </div>
 
         {/* Publication filter */}
@@ -247,22 +248,21 @@ export default function Navbar({ setLDTheme }) {
         {/* Login buttons */}
         {!UState?.jwt && (
           <div className={styles.login_buttons}>
-            <button
-              className="button-left  background-secondary-2"
+            <Button
+              variant="outlined"
               onClick={() => {
                 router.push("/sesion");
               }}
             >
               Iniciar
-            </button>
-            <button
-              className="button-right background-secondary-2"
+            </Button>
+            <Button
               onClick={() => {
                 router.push("/sesion/registrar");
               }}
             >
               Registrar
-            </button>
+            </Button>
           </div>
         )}
 

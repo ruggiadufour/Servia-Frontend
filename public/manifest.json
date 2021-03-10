@@ -1,0 +1,33 @@
+{
+  "name": "Servia | Encuentra tu servicio ideal",
+  "short_name": "Servia",
+  "theme_color": "#599d09",
+  "background_color": "#363838",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "IconoV1.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "IconoV2.png",
+      "sizes": "200x200",
+      "type": "image/png"
+    },
+    {
+        "src": "IconoV3.png",
+        "sizes": "336x336",
+        "type": "image/png"
+    },
+    {
+        "src": "IconoV4.png",
+        "sizes": "1900x1900",
+        "type": "image/png"
+    }
+  ],
+  "splash_pages": null
+}

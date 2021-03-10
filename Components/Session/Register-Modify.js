@@ -208,7 +208,7 @@ export default function RegisterModify({
           <Grid item xs={12}>
             {!register && UState?.user?.public_user.verified && (
               <Typography color="error">
-                Los usuarios modificados no pueden modificar su nombre y
+                Los usuarios verificados no pueden modificar su nombre y
                 apellido. Si realmente quiere modificarlos, contacte a un
                 administrador.
               </Typography>
@@ -219,7 +219,7 @@ export default function RegisterModify({
           <Grid item xs={12} lg={6} md={6} sm={12}>
             <select
               name="select"
-              className="w-100 select"
+              className="w-100 select text-secondary-2"
               onChange={selectProvince}
               value={user.province}
               required={true}
@@ -234,7 +234,7 @@ export default function RegisterModify({
           <Grid item xs={12} lg={6} md={6} sm={12}>
             <select
               name="select"
-              className="w-100 select"
+              className="w-100 select text-secondary-2"
               onChange={(e) => {
                 setUser({
                   ...user,
@@ -511,7 +511,7 @@ function SetCategoriesToProvide({
           onClick={() => {
             select(cat[0]);
           }}
-          className={`rounded-span ${
+          className={`rounded-span text-same-ever ${
             cat[1].selected ? "selected" : "unselected"
           }`}
           key={i}

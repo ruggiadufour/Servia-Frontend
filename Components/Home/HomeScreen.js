@@ -2,7 +2,7 @@ import { Typography } from "@material-ui/core";
 export default function HomeScreen() {
   return (
     <>
-      <div className="screen-container">
+      <div className="screen-container home-background">
         <div className="screen-text">
           <h1>
             <strong className="text-dark-1 servia-font">
@@ -38,16 +38,7 @@ export default function HomeScreen() {
           background-position: center;
           background-size: cover;
         
-          background: linear-gradient(
-            217deg,
-              rgba(0, 255, 0, 0.1),
-              rgba(255, 255, 255, 100)
-            ),linear-gradient(
-            to right,
-              rgba(0, 255, 0, 0.05),
-              rgba(255, 255, 255, 100)
-            ),
-            url("/tester.jpg") no-repeat center/cover;
+          
 
           min-height: 100vh;
           position: relative;

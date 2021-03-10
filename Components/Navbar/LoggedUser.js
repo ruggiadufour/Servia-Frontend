@@ -183,7 +183,7 @@ export default function LoggedUser() {
           router.push("/chats");
         }}
       >
-        <Badge badgeContent={1} color="secondary">
+        <Badge badgeContent={0} color="secondary">
           {/* <Chat /> */}
           📩
         </Badge>

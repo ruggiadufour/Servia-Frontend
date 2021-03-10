@@ -25,7 +25,7 @@ export default function Hamburg() {
         aria-label="menu hamburguesa"
       >
         {/* <MenuIcon /> */}
-        🍔
+        🎲
       </IconButton>
       <Menu
         id="simple-menu"

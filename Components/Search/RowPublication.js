@@ -65,7 +65,7 @@ export default function RowPublication({ publication, removeOne }) {
   }
 
   return (
-    <div className="card-row background-2">
+    <div className="card-row background-1">
       <div className="card-img">
         <img src={getImage()} alt="1° imagen" className="image" />
         <div
@@ -151,7 +151,7 @@ export default function RowPublication({ publication, removeOne }) {
 
         {/* <Chip variant="outlined" label={publication.service.name} /> */}
 
-        <Stars valor={4} clickeable={false} cambiarValor={() => {}} />
+        {/* <Stars valor={4} clickeable={false} cambiarValor={() => {}} /> */}
 
         <Button variant="contained" color="primary" onClick={seeMore}>
           Ver más

@@ -37,7 +37,7 @@ const cards = [
 
 export default function Extra() {
   return (
-    <div className="extra ">
+    <div className="extra  background-2">
       <div className="general-width centering">
         <Typography component="h2" variant="h4" align="left">
           ¿Qué podés hacer en Servia?
@@ -56,7 +56,6 @@ export default function Extra() {
       <style jsx>
         {`
           .extra {
-            background-color: gray;
             width: 100%;
             padding: 60px 0;
           }
@@ -73,7 +72,7 @@ export default function Extra() {
 
 function Card({ title, desc, src_img }) {
   return (
-    <div className="card">
+    <div className="card background-1">
       <Image
         src={src_img}
         alt="card icon"
@@ -95,7 +94,6 @@ function Card({ title, desc, src_img }) {
             max-width: 300px;
             min-width: 200px;
             min-height: 350px;
-            background-color: white;
           }
           .card-content {
             padding: 10px;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 
 //Material UI
@@ -116,7 +116,7 @@ export default function ReportarPublicacion({ type, id }) {
         className="flex-col"
       >
         <Fade in={open}>
-          <div className="general-width p-15 background-primary-1">
+          <div className="general-width p-15 background-1">
             <Typography variant="h4" component="h2" align="center">
               {`Reportar ${type?"perfil":"publicación"}`}
             </Typography>

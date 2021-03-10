@@ -14,7 +14,7 @@ export default function Home_container({ categories }) {
         keywords={`Servia, servicios domésticos, proveedor de srevicios, publicaciones, promocion de servicios`}
       />
 
-      <main className="flex-col">
+      <main className="flex-col background-1">
         <HomeScreen />
         <Home categories={categories} />
         <Extra />

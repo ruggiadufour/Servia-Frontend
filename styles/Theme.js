@@ -1,17 +1,19 @@
-import { useState } from 'react'
-
+import { useState } from "react";
 
 export default function Theme({ children, theme }) {
-  const [theme_, setTheme] = useState(theme)
+  const [theme_, setTheme] = useState(theme);
 
   return (
     <>
-      {
-        children
-      }
+      {children}
       <style jsx>{`
-        {/* Text color */}
-        
+         {
+          /* Text color */
+        }
+
+        :global(.text-same-ever) {
+          color: ${theme.palette.text.same};
+        }
         :global(.text-dark-1) {
           color: ${theme.palette.text.primary.light};
         }
@@ -40,12 +42,17 @@ export default function Theme({ children, theme }) {
           color: ${theme.palette.error.main};
         }
 
-        {/* Background */}
+         {
+          /* Background */
+        }
         :global(.background-1) {
           background-color: ${theme.palette.background.paper};
         }
         :global(.background-2) {
           background-color: ${theme.palette.background.default};
+        }
+        :global(.background-same) {
+          background-color: ${theme.palette.text.same};
         }
         :global(.background-primary-1) {
           background-color: ${theme.palette.primary.light};
@@ -68,12 +75,26 @@ export default function Theme({ children, theme }) {
         :global(.background-error) {
           background-color: ${theme.palette.error.main};
         }
+        :global(.home-background) {
+          background: linear-gradient(
+              217deg,
+              rgba(0, 255, 0, 0.1),
+              ${theme.palette.common.black}
+            ),
+            linear-gradient(
+              to right,
+              rgba(0, 255, 0, 0.05),
+              ${theme.palette.common.black}
+            ),
+            url("/tester.jpg") no-repeat center/cover;
+        }
       `}</style>
-      </>
+    </>
   );
 }
 
- {/* :global(::selection) {
+{
+  /* :global(::selection) {
           color: ${theme.colors.background3};
           background: ${theme.colors.third};
         }
@@ -84,4 +105,5 @@ export default function Theme({ children, theme }) {
         :global(::-webkit-scrollbar-thumb) {
           border-radius: 3px;
           background-color: tomato;
-        } */}
+        } */
+}

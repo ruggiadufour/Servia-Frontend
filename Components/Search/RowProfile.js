@@ -33,7 +33,7 @@ export default function RowProfile({ profile }) {
 
 
   return (
-    <div className="card-row background-2">
+    <div className="card-row background-1">
       <div className="card-img">
         <img src={getImage()} alt="1° imagen" className="image" />
       </div>
@@ -75,10 +75,10 @@ export default function RowProfile({ profile }) {
         </Typography>
 
         {profile.categories.map((cat, i) => (
-          <Chip variant="outlined" label={"✔ " + cat.name} key={i} />
+          <Chip variant="outlined" className="text-secondary-2" label={"✔ " + cat.name} key={i} />
         ))}
 
-        <Estrellas valor={4} clickeable={false} cambiarValor={() => {}} />
+        {/* <Estrellas valor={4} clickeable={false} cambiarValor={() => {}} /> */}
 
         {UState?.user.public_user.id !== profile.id && (
           <Contact fixed={false} profile={profile} type={0} />

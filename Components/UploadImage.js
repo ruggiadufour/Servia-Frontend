@@ -71,7 +71,7 @@ const SingleFileAutoSubmit = ({ setFiles, Files, preloadImages, amount, setToDel
         canCancel={false}
         accept="image/*"
         inputWithFilesContent={"Subir otra imagen"}
-        inputContent={amount===1?`Selecciona${amount} imagen`:`Selecciona hasta ${amount} imagenes`}
+        inputContent={amount===1?`Selecciona ${amount} imagen`:`Selecciona hasta ${amount} imagenes`}
         styles={{
           dropzone: { width: "100%", height: "100%", overflow: "auto" },
           dropzoneActive: { borderColor: "green" },

@@ -1,31 +1,38 @@
 //Styles
 import "../styles/globals.css";
 //Framework
-import {useState} from 'react'
+import { useState } from "react";
 import { parseCookies } from "nookies";
 import Router from "next/router";
-import { getLoggedUser } from '../Api/logged_user'
+import { getLoggedUser } from "../Api/logged_user";
 //Components
 import Nav from "../Components/Navbar/Nav";
 import Footer from "../Components/Footer/Footer";
 import WrraperApp from "../Components/Wrapper_app";
 
 function MyApp({ Component, pageProps, session }) {
-  const [LDTheme, setLDTheme] = useState(false)
+  const [LDTheme, setLDTheme] = useState(false);
 
   return (
     <>
       <WrraperApp session={session} LDTheme={LDTheme}>
-        <Nav setLDTheme={setLDTheme}/>
-        <div className="content">
-          <Component {...pageProps} />
+        <div className="heigh100vh">
+          <Nav setLDTheme={setLDTheme} />
+          <div className="content background-1">
+            <Component {...pageProps} />
+          </div>
         </div>
         <Footer />
       </WrraperApp>
       <style jsx>
         {`
+          .heigh100vh {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+          }
           .content {
-            flex: 1;
+            flex: 2;
             height: 100%;
             flex-basis: fill;
             display: flex;
@@ -48,16 +55,19 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   }
 
   const session = parseCookies(ctx).session;
-  
-  let sessionUp = null
-  if(session){
-    const parsed = JSON.parse(session)
-    let user = await getLoggedUser(parsed.jwt, parsed.user.id)
-    sessionUp = {user: user, jwt: parsed.jwt}
+
+  let sessionUp = null;
+  if (session) {
+    const parsed = JSON.parse(session);
+    let user = await getLoggedUser(parsed.jwt, parsed.user.id);
+    sessionUp = { user: user, jwt: parsed.jwt };
   }
 
   if (!session) {
-    if (ctx.pathname === "/perfil/modificar" || ctx.pathname === "/perfil/proveedor/modificar") {
+    if (
+      ctx.pathname === "/perfil/modificar" ||
+      ctx.pathname === "/perfil/proveedor/modificar"
+    ) {
       redirectUser(ctx, "/login");
     }
   } else {
@@ -65,11 +75,11 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       redirectUser(ctx, "/");
     }
 
-    if(ctx.pathname === "/admin" && sessionUp?.user.role.id!==2){
+    if (ctx.pathname === "/admin" && sessionUp?.user.role.id !== 2) {
       redirectUser(ctx, "/");
     }
 
-    if(ctx.pathname === "/proveedor" && sessionUp?.user.type!==2){
+    if (ctx.pathname === "/proveedor" && sessionUp?.user.type !== 2) {
       redirectUser(ctx, "/");
     }
   }
