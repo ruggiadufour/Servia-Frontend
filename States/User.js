@@ -81,7 +81,7 @@ function ProviderUserState({ children, session }) {
 
       //Setting chats
       const { data } = await getChats(UState.user.public_user.id, UState.jwt);
-      CDispatch({ type: "setChats", payload: data });
+      CDispatch({ type: "setChats", payload: data?data:[] });
     }
   }, [UState]);
 

@@ -1,5 +1,5 @@
 import React, { useState, Component, useEffect, useContext } from "react";
-import Image from 'next/image'
+import Image from "next/image";
 
 import ChatItem from "./ChatComponents/ChatItem/ChatItem";
 import ChatList from "./ChatComponents/ChatList/ChatList";
@@ -8,16 +8,15 @@ import Input from "./ChatComponents/Input/Input";
 import Button from "./ChatComponents/Button/Button";
 import SideBar from "./ChatComponents/SideBar/SideBar";
 
-
 //Material UI
 import {
   IconButton,
   Button as Boton,
   LinearProgress as Cargando,
 } from "@material-ui/core/";
-import Alerta from "@material-ui/lab/Alert";
+import Alert from "@material-ui/lab/Alert";
 import {
-  KeyboardReturn as Atras,
+  KeyboardReturn as Back,
   StarRate,
   TrackChangesOutlined,
   TramRounded,
@@ -28,7 +27,7 @@ export function Chat() {
   const { CState, UState, socket } = useContext(UserState);
   const API = process.env.NEXT_PUBLIC_API;
   //Declaramos las viarables que se utilizarán en el componente
-  const [atras, setatras] = useState(false);
+  const [goBack, setGoBack] = useState(false);
   const [chats, setChats] = useState([]);
   const [messages, setMessages] = useState([]);
   const [contentMessage, setContentMessage] = useState("");
@@ -60,7 +59,10 @@ export function Chat() {
           title: `${receiver.name} ${receiver.surname}`,
           date: new Date(chat.messages[chat.messages.length - 1].created_at),
           subtitle: chat.messages[chat.messages.length - 1].content,
-          unread: UState.user.public_user.id==chat.who_start_it?chat.noread_sender:chat.noread_receiver,
+          unread:
+            UState.user.public_user.id == chat.who_start_it
+              ? chat.noread_sender
+              : chat.noread_receiver,
           messages: [],
           messages_no_ready: chat.messages,
           sender: sender,
@@ -94,13 +96,21 @@ export function Chat() {
   }, [chats]);
 
   function setCurrentChat(chat) {
+    setGoBack(true);
+
     let msjs = chat.messages_no_ready.map((message) =>
       getMessageObject(message, chat)
     );
     setSelectedChat(chat);
     setMessages(msjs);
 
-    socket.emit("read-messages",JSON.stringify({id: chat.id, who:UState.user.public_user.id==chat.who_start_it}))
+    socket.emit(
+      "read-messages",
+      JSON.stringify({
+        id: chat.id,
+        who: UState.user.public_user.id == chat.who_start_it,
+      })
+    );
   }
 
   function sendMessage() {
@@ -122,50 +132,80 @@ export function Chat() {
 
   return (
     <div className="container-chat">
-      <div className="chat-list">
+      <div className={`chat-list c-list ${goBack ? "movile" : ""}`}>
         <SideBar
           top={<div></div>}
           center={
-            <ChatList
-              className="chat-list"
-              onClick={setCurrentChat}
-              dataSource={chats}
-            />
+            <>
+              {chats.length !== 0 && (
+                <ChatList
+                  className="chat-list"
+                  onClick={setCurrentChat}
+                  dataSource={chats}
+                />
+              )}
+              {chats.length === 0 && (
+                <Alert variant="filled" severity="info">
+                  No tenés ningún chat aún. Contactá a un proveedor para
+                  tenerlo.
+                </Alert>
+              )}
+            </>
           }
           bottom={<div></div>}
         />
       </div>
-      <IconButton
-        style={{
-          position: atras ? "relative" : "absolute",
-          left: "0px",
-          top: "70px",
-          zIndex: 100,
-        }}
-      >
-        <Atras />
-      </IconButton>
-      <div className="right-panel">
+
+      {goBack && (
+        <div className="back-button pc">
+          <IconButton
+            onClick={() => {
+              setGoBack(!goBack);
+            }}
+          >
+            <Back />
+          </IconButton>
+        </div>
+      )}
+
+      <div className={`right-panel r-panel ${!goBack ? "movile" : ""}`}>
         {selectedChat && (
           <ChatItem
             avatar={getAvatar(selectedChat.receiver.profile?.url)}
             alt={"receptor"}
             title={selectedChat.title}
-            subtitle={selectedChat.type===0?selectedChat.who_start_it==UState.user.public_user.id?"Sis":"Non":"No"}
+            subtitle={
+              selectedChat.type === 0
+                ? selectedChat.who_start_it == UState.user.public_user.id
+                  ? "Sis"
+                  : "Non"
+                : "No"
+            }
             date={null}
             unread={0}
             className="chat-item"
           />
         )}
 
-        {messages.length === 0 && <Image width={300} height={300} layout="intrinsic" src="/IconoV3.png" />}
+        {messages.length === 0 && (
+          <div className="m-list">
+            <Image
+              width={300}
+              height={300}
+              layout="intrinsic"
+              src="/IconoV3.png"
+            />
+          </div>
+        )}
 
-        {messages.length !== 0 && <MessageList
-          className="message-list"
-          lockable={true}
-          downButtonBadge={10}
-          dataSource={messages}
-        />}
+        {messages.length !== 0 && (
+          <MessageList
+            className="message-list"
+            lockable={true}
+            downButtonBadge={10}
+            dataSource={messages}
+          />
+        )}
 
         {selectedChat && (
           <Input
@@ -197,6 +237,32 @@ export function Chat() {
           />
         )}
       </div>
+      <style jsx>
+        {`
+          .back-button {
+            display: block;
+            position: absolute;
+            left: 0px;
+            top: 50px;
+            z-index: 100;
+            border-radius: 50%;
+          }
+
+          @media (max-width: 600px) {
+            .movile {
+              display: none;
+            }
+            .c-list {
+              min-width: 100vw;
+            }
+          }
+          @media (min-width: 600px) {
+            .pc {
+              display: none;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 

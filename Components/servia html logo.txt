@@ -1,0 +1,76 @@
+<div class="logo-container">
+  <div class="circle">
+    <div class="house">
+      <div class="door"></div>
+      <div class="window"></div>
+    </div>
+   </div>
+  <div class="rect"></div>
+</div>
+<style>
+  .door, .window, .rect, .circle{
+    background: black;
+  }
+  .logo-container{
+    position: relative;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    background: transparent;
+    width: 100px;
+    height:100px;
+  }
+  .door{
+    position: absolute;
+    bottom: 15%;
+    left: 20%;
+    width: 25%;
+    height: 40%;
+  }
+  .window{
+    position: absolute;
+    top: 45%;
+    left: 55%;
+    width: 25%;
+    height: 20%;
+  }
+  
+  .house{
+    position:absolute;  
+    left:50%;
+    bottom: 0%;
+    background: white;
+  	width: 65%;
+    height: 65%;
+    clip-path: polygon(33% 0%, 69% 0%, 100% 33%, 100% 100%, 69% 100%, 0% 100%, 0% 69%, 0% 33%);
+    border-radius: 5px;
+    transform: translate(-50%,0);
+
+  }
+  .rect{
+    width: 25%;
+    height: 55%;
+    border-radius: 5px;
+    position: absolute;
+    left: 60%;
+    top: 0%;
+    transform: rotate(45deg) 
+  }
+  .circle{
+    width: 65%;
+    height: 65%;
+    border-radius: 50%;
+    position: absolute;
+    bottom:0;
+    left: 0;
+    overflow:hidden;
+  }
+</style>
+
+<!-- OBJECTIVE -->
+<!-- Write HTML/CSS in this editor and replicate the given target image in the least code possible. What you write here, renders as it is -->
+
+<!-- SCORING -->
+<!-- The score is calculated based on the number of characters you use (this comment included :P) and how close you replicate the image. Read the FAQS (https://cssbattle.dev/faqs) for more info. -->
+
+<!-- IMPORTANT: remove the comments before submitting -->

@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core";
 import {
   Phone as PhoneIcon,
-  FileCopy as Copiar,
+  FileCopy,
   ExpandLess,
   ExpandMore,
   CheckCircleOutline as Verificado,
@@ -39,11 +39,11 @@ export default function ProfileOwner({ profile }) {
     });
   }, []);
 
-  function copiarAlPortapapeles(telefono) {
+  function clipBoard(phone) {
     // Crea un campo de texto "oculto"
     var aux = document.createElement("input");
     // Asigna el contenido del elemento especificado al valor del campo
-    aux.setAttribute("value", telefono);
+    aux.setAttribute("value", phone);
     // Añade el campo a la página
     document.body.appendChild(aux);
     // Selecciona el contenido del campo
@@ -52,7 +52,6 @@ export default function ProfileOwner({ profile }) {
     document.execCommand("copy");
     // Elimina el campo de la página
     document.body.removeChild(aux);
-    setcopiado(true);
   }
 
   return (
@@ -111,21 +110,14 @@ export default function ProfileOwner({ profile }) {
                 <Button startIcon={<PhoneIcon />}>{profile.phone}</Button>
               </a>
               <Tooltip title="Copiar">
-                <IconButton onClick={() => copiarAlPortapapeles(profile.phone)}>
-                  <Copiar />
+                <IconButton onClick={() => clipBoard(profile.phone)}>
+                  <FileCopy />
                 </IconButton>
               </Tooltip>
             </Grid>
           )}
         </Hidden>
       </Grid>
-      <style jsx>
-        {`
-            .sticky{
-             
-            }
-        `}
-      </style>
     </div>
   );
 }

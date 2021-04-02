@@ -153,22 +153,23 @@ export default function RowPublication({ publication, removeOne }) {
 
         {/* <Stars valor={4} clickeable={false} cambiarValor={() => {}} /> */}
 
-        <Button variant="contained" color="primary" onClick={seeMore}>
+        <Button onClick={seeMore}>
           Ver más
         </Button>
+
+        {UState?.user.public_user.id !== thisPublicaction.public_user.id && (
+          <Contact
+            fixed={false}
+            profile={thisPublicaction.public_user}
+            type={thisPublicaction.type?1:2}
+          />
+        )}        
 
         {openDialog && (
           <AlertDialog
             title={`¿Realmente quiere eliminar ${thisPublicaction.title}?`}
             message="La publicación se eliminará permanentemente."
             callback={deleteThis}
-          />
-        )}
-        {UState?.user.public_user.id !== thisPublicaction.public_user.id && (
-          <Contact
-            fixed={false}
-            profile={thisPublicaction.public_user}
-            type={thisPublicaction.type?1:2}
           />
         )}
       </div>

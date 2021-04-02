@@ -9,6 +9,7 @@ import {
   Button,
   Divider,
 } from "@material-ui/core";
+import ProviderButton from "../../Components/Session/ProviderButton";
 
 //Set state and cookies
 import axios from "axios";
@@ -56,8 +57,6 @@ export default function IniciarSesion({ mensaje }) {
         }
       )
       .then(async (response) => {
-        console.log("Well done!");
-
         const user_ = { ...response.data.user };
         delete user_.notifications;
         delete user_.dni_image;
@@ -76,7 +75,7 @@ export default function IniciarSesion({ mensaje }) {
           }
         );
 
-        console.log(response.data)
+        console.log(response.data);
 
         NDispatch({
           type: "setNotifications",
@@ -158,6 +157,14 @@ export default function IniciarSesion({ mensaje }) {
           <div hidden={!loading} className="w-100">
             <LinearProgress />
           </div>
+    
+          <Grid item xs={6} align="center">
+            <ProviderButton provider={"google"}/>
+          </Grid>
+
+          <Grid item xs={6} align="center">
+            <ProviderButton provider={"facebook"}/>
+          </Grid>
 
           <Grid item xs={12} align="center">
             <Button

@@ -20,6 +20,7 @@ import {
   Hidden,
 } from "@material-ui/core/";
 import UploadImage from "../../Components/UploadImage";
+import ProviderButton from './ProviderButton'
 
 export default function RegisterModify({
   submit,
@@ -177,6 +178,18 @@ export default function RegisterModify({
               {register ? "Registrar usuario" : "Modificar perfil"}
             </Typography>
           </Grid>
+
+          {
+            register && <>
+              <Grid item xs={6} align="center">
+                <ProviderButton provider={"google"} />
+              </Grid>
+
+              <Grid item xs={6} align="center">
+                <ProviderButton provider={"facebook"} />
+              </Grid>
+            </>
+          }
 
           <Grid item xs={12} lg={6} md={6} sm={6}>
             <TextField
@@ -384,14 +397,16 @@ export default function RegisterModify({
                 />
               </Grid>
 
-              <div className="flex-row">
-                <SetCategoriesToProvide
-                  UState={UState?.user}
-                  setCategories={setCategories}
-                  categories={categories}
-                  register={register}
-                />
-              </div>
+              <Grid item xs={12}>
+                <div className="flex-row">
+                  <SetCategoriesToProvide
+                    UState={UState?.user}
+                    setCategories={setCategories}
+                    categories={categories}
+                    register={register}
+                  />
+                </div>
+              </Grid>
             </>
           )}
 

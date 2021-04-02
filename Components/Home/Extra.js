@@ -94,6 +94,11 @@ function Card({ title, desc, src_img }) {
             max-width: 300px;
             min-width: 200px;
             min-height: 350px;
+            transition: transform .55s;
+          }
+          .card:hover{
+            transform: scale(1.1, 1.1);
+            border: solid thin gray;
           }
           .card-content {
             padding: 10px;

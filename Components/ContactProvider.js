@@ -66,14 +66,7 @@ export default function BotonContratar({ isFixed, type, profile }) {
 
   return (
     <div >
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleOpen}
-        className="button"
-      >
-        Contactar
-      </Button>
+      <button onClick={handleOpen} className={`button background-primary-3 ${isFixed?"fixed":""}`}>Contactar</button>
 
       <Modal
         aria-labelledby="transition-modal-title"
@@ -128,7 +121,24 @@ export default function BotonContratar({ isFixed, type, profile }) {
       <style jsx>
         {`          
           .button {
-            margin: 10px;
+            padding: 10px;
+            outline: none;
+            border: none;
+            border-radius: 2.5px;
+            
+            font-size: 1rem;
+          }
+          .button:hover{
+            transform: scale(1.04) ${isFixed?"translate(-50%,-50%)":""};
+            opacity: .85;
+            cursor: pointer;
+          }
+          .fixed{
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            z-index: 500;
           }
         `}
       </style>

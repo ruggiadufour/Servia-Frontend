@@ -19,23 +19,29 @@ export default function Home({ categories }) {
         <Grid container spacing={5} justify="space-around" alignItems="center">
           {categories.map((cat, i) => {
             let API = process.env.NEXT_PUBLIC_API;
-            let image = cat.image?.formats?.small?.url?(API+cat.image?.formats?.small?.url):"/Icono3.png"
+            let image = cat.image?.formats?.small?.url
+              ? API + cat.image?.formats?.small?.url
+              : "/Icono3.png";
 
-            return <Grid item sm={4} md={3} lg={2} key={i} align="center">
-              <Typography align="center" variant="body1">
-                {cat.name}
-              </Typography>
+            return (
+              <Grid item sm={4} md={3} lg={2} key={i} align="center">
+                <div className="category">
+                  <Typography align="center" variant="body1">
+                    {cat.name}
+                  </Typography>
 
-              <img
-                src={ image }
-                height="150px"
-                width="150px"
-                className="circle-image"
-                onClick={() => {
-                  searchProfiles(cat.id, cat.name);
-                }}
-              />
-            </Grid>;
+                  <img
+                    src={image}
+                    height="150px"
+                    width="150px"
+                    className="circle-image"
+                    onClick={() => {
+                      searchProfiles(cat.id, cat.name);
+                    }}
+                  />
+                </div>
+              </Grid>
+            );
           })}
         </Grid>
       </div>
@@ -50,6 +56,12 @@ export default function Home({ categories }) {
           }
           .categories {
             margin: 60px auto;
+          }
+          .category {
+            transition: transform .55s;
+          }
+          .category:hover {
+            transform: scale(1.07, 1.07);
           }
         `}
       </style>

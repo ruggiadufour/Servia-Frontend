@@ -11,6 +11,14 @@ export default function Theme({ children, theme }) {
           /* Text color */
         }
 
+        :global(::-moz-selection) {
+          color: ${theme.palette.primary.main};
+          background: ${theme.palette.text.same};
+        }
+        :global(::selection) {
+          color: ${theme.palette.primary.main};
+          background: ${theme.palette.text.same};
+        }
         :global(.text-same-ever) {
           color: ${theme.palette.text.same};
         }
@@ -18,7 +26,7 @@ export default function Theme({ children, theme }) {
           color: ${theme.palette.text.primary.light};
         }
         :global(.text-dark-2) {
-          color: ${theme.palette.text.primary.light};
+          color: ${theme.palette.text.primary.dark};
         }
         :global(.text-primary-1) {
           color: ${theme.palette.primary.light};
